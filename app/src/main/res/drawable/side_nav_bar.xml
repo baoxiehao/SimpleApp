@@ -1,9 +1,11 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
+    <!-- angle 0 means the direction from left to right,
+         when increased by 45, counterclockwise the direction -->
     <gradient
-        android:angle="135"
-        android:centerColor="#4CAF50"
-        android:endColor="#2E7D32"
-        android:startColor="#81C784"
+        android:angle="315"
+        android:centerColor="@color/nav_center"
+        android:endColor="@color/nav_end"
+        android:startColor="@color/nav_start"
         android:type="linear" />
 </shape>

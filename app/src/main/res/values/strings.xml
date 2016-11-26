@@ -5,4 +5,16 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <!-- Navigation -->
+    <string name="nav_author">Elixon</string>
+    <string name="nav_desc">https://baoxiehao.github.com</string>
+
+    <string name="nav_menu_rss">RSS</string>
+    <string name="nav_menu_gallery">Gallery</string>
+    <string name="nav_menu_share">Share</string>
+    <string name="nav_menu_setting">Setting</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

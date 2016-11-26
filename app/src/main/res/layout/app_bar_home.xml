@@ -5,30 +5,74 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.yekong.droid.simpleapp.HomeActivity">
+    tools:context="com.yekong.droid.simpleapp.ui.HomeActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.Dark.ActionBar">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.Light" />
+
+        <!--
+           app:tabMode
+               fixed
+                   - Display every single tab on the screen.
+                     Good for a small number of tabs but totally a bad choice if there are so many tabs.
+               scrollable
+                   - In the case you are not sure that all of them could be displayed nicely at a time.
+                     Let user scroll through tabs instead just like Google Play Store's.
+           app:tabGravity
+               fill
+                   - distribute all available space to each tab
+               center
+                   - place all of the tabs at the center of the screen,
+                     note that this attribute will be ignored if tabMode is set to scrollable.
+        -->
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.Dark.ActionBar"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+            app:tabMode="fixed" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_home" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+    <!--
+        android:src
+            - define a Resource ID of icon you want (40dp transparent png file is recommended)
+        app:fabSize
+            - "normal" means the standard 56dp button used in most of the case,
+              "mini" is an another choice that will change its width to 40dp.
+        app:elevation
+            - idle state's shadow depth
+        app:pressedTranslationZ
+            - press state's shadow depth
+        app:backgroundTint
+            - FAB uses the accent color but you could override
+    -->
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        android:src="@android:drawable/ic_dialog_email"
+        app:backgroundTint="@color/primary"
+        app:elevation="6dp"
+        app:fabSize="normal"
+        app:pressedTranslationZ="12dp" />
 
 </android.support.design.widget.CoordinatorLayout>

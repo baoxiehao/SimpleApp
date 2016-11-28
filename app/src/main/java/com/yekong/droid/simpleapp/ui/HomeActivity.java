@@ -1,9 +1,9 @@
 package com.yekong.droid.simpleapp.ui;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -14,9 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.yekong.droid.simpleapp.R;
+import com.yekong.droid.simpleapp.mvp.common.UserCase;
+import com.yekong.droid.simpleapp.util.EventUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,6 +60,16 @@ public class HomeActivity extends AppCompatActivity
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        mDrawerLayout.addOnLayoutChangeListener((view, i, i1, i2, i3, i4, i5, i6, i7) -> {
+            View navAuthorContainer = mNavView.findViewById(R.id.nav_author_container);
+            if (navAuthorContainer != null) {
+                navAuthorContainer.setOnClickListener(v -> {
+                    UserCase.showWebView(getString(R.string.nav_author_desc));
+                    new Handler().postDelayed(() -> mDrawerLayout.closeDrawer(GravityCompat.START), 200);
+                });
+            }
+        });
+
         mNavView.setNavigationItemSelectedListener(this);
 
         initViewPager();
@@ -66,8 +77,10 @@ public class HomeActivity extends AppCompatActivity
 
     private void initViewPager() {
         final FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
-        adapter.addFragment(NewsFragment.newInstance(), "News");
-        adapter.addFragment(new FavoriteFragment(), "Favorite");
+        adapter.addFragment(new ZhiHuNewsFragment(), "ZhiHu");
+        adapter.addFragment(new GankArticleFragment(), "Gank");
+        adapter.addFragment(new BaiduImageFragment(), "Baidu");
+        adapter.addFragment(new GankFuliFragment(), "Fuli");
         if (mViewPager != null) {
             mViewPager.setAdapter(adapter);
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
@@ -77,13 +90,9 @@ public class HomeActivity extends AppCompatActivity
 
     @OnClick(R.id.fab)
     void initFab() {
-        Snackbar.make(mFab, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(HomeActivity.this, "Action done", Toast.LENGTH_SHORT).show();
-                    }
-                }).show();
+        EventUtils.TopEvent.send();
+//        Snackbar.make(mFab, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                .setAction("Action", view -> Toaster.quick("Action done")).show();
     }
 
     @Override

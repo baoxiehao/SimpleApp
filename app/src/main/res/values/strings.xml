@@ -8,7 +8,7 @@
 
     <!-- Navigation -->
     <string name="nav_author">Elixon</string>
-    <string name="nav_desc">https://baoxiehao.github.com</string>
+    <string name="nav_author_desc">https://baoxiehao.github.com</string>
 
     <string name="nav_menu_rss">RSS</string>
     <string name="nav_menu_gallery">Gallery</string>
@@ -17,4 +17,18 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="error_require_email">Error, email is required</string>
+    <string name="error_require_password">Error, password is required</string>
+
+    <string name="mvp_empty_tip">Empty</string>
+    <string name="mvp_error_tip">Error</string>
+
+    <string name="web_refresh">Refresh</string>
+    <string name="web_share">Share</string>
+    <string name="web_copy_link">Copy Link</string>
+    <string name="web_open_with">Open with</string>
+
+    <string name="title_activity_image">ImageActivity</string>
+    <string name="save_image">Save Image</string>
 </resources>

@@ -1,10 +1,8 @@
 package com.yekong.droid.simpleapp.ui;
 
-import com.yekong.droid.simpleapp.multitype.BaiduImage;
+import com.yekong.droid.simpleapp.multitype.Baidu;
 import com.yekong.droid.simpleapp.multitype.BaiduImageViewProvider;
-import com.yekong.droid.simpleapp.mvp.contract.BaiduImageContract;
-
-import java.util.List;
+import com.yekong.droid.simpleapp.mvp.contract.BaiduContract;
 
 import me.drakeet.multitype.MultiTypeAdapter;
 
@@ -13,24 +11,18 @@ import me.drakeet.multitype.MultiTypeAdapter;
  */
 
 public class BaiduImageFragment extends RecyclerPageFragment<
-        List<BaiduImage.Entity>, BaiduImageContract.View, BaiduImageContract.Presenter>
-        implements BaiduImageContract.View {
+        Baidu.Image, BaiduContract.Image.View, BaiduContract.Image.Presenter>
+        implements BaiduContract.Image.View {
 
     @Override
-    public BaiduImageContract.Presenter createPresenter() {
-        return new BaiduImageContract.Presenter();
-    }
-
-    @Override
-    public void loadData(boolean pullToRefresh) {
-        super.showLoading(pullToRefresh);
-        super.presenter.onRefreshData();
+    public BaiduContract.Image.Presenter createPresenter() {
+        return new BaiduContract.Image.Presenter();
     }
 
     @Override
     protected MultiTypeAdapter setupAdapter() {
         MultiTypeAdapter adapter = new MultiTypeAdapter(mData);
-        adapter.register(BaiduImage.Entity.class, new BaiduImageViewProvider());
+        adapter.register(Baidu.Image.class, new BaiduImageViewProvider());
         return adapter;
     }
 }

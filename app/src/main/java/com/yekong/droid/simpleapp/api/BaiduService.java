@@ -1,6 +1,6 @@
 package com.yekong.droid.simpleapp.api;
 
-import com.yekong.droid.simpleapp.multitype.BaiduImage;
+import com.yekong.droid.simpleapp.multitype.Baidu;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +31,7 @@ public class BaiduService {
         mBaiduApi = baiduApi;
     }
 
-    public Observable<BaiduImage.Response> searchImages(String col, String tag, int startIndex, int returnNumber) {
+    public Observable<Baidu.ImagesResponse> searchImages(String col, String tag, int startIndex, int returnNumber) {
         Map<String, String> options = new HashMap<>(5);
         options.put("col", col);
         options.put("tag", tag);

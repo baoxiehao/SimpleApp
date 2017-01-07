@@ -52,21 +52,21 @@ import me.drakeet.multitype.Item;
         ]
     }
  */
-public class ZhiHuNews {
+public class ZhiHu {
 
-    public class ListResponse {
+    public class NewsResponse {
         public Date date;
-        public List<ListItem> stories;
+        public List<News> stories;
     }
 
-    public class ListItem implements Item {
+    public class News implements Item {
         public String title;
         public List<String> images;
         public String id;
         public Date date;
     }
 
-    public class DetailResponse implements Item {
+    public class NewsDetail implements Item {
         public String title;
         public String image;
         public String share_url;

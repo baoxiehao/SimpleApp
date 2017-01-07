@@ -2,9 +2,7 @@ package com.yekong.droid.simpleapp.ui;
 
 import com.yekong.droid.simpleapp.multitype.Gank;
 import com.yekong.droid.simpleapp.multitype.GankArticleViewProvider;
-import com.yekong.droid.simpleapp.mvp.contract.GankArticleContract;
-
-import java.util.List;
+import com.yekong.droid.simpleapp.mvp.contract.GankContract;
 
 import me.drakeet.multitype.MultiTypeAdapter;
 
@@ -13,18 +11,12 @@ import me.drakeet.multitype.MultiTypeAdapter;
  */
 
 public class GankArticleFragment extends RecyclerPageFragment<
-        List<Gank.Article>, GankArticleContract.View, GankArticleContract.Presenter>
-        implements GankArticleContract.View {
+        Gank.Article, GankContract.Article.View, GankContract.Article.Presenter>
+        implements GankContract.Article.View {
 
     @Override
-    public GankArticleContract.Presenter createPresenter() {
-        return new GankArticleContract.Presenter();
-    }
-
-    @Override
-    public void loadData(boolean pullToRefresh) {
-        super.showLoading(pullToRefresh);
-        super.presenter.onRefreshData();
+    public GankContract.Article.Presenter createPresenter() {
+        return new GankContract.Article.Presenter();
     }
 
     @Override

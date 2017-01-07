@@ -16,10 +16,12 @@ import com.hannesdorfmann.mosby.mvp.viewstate.lce.data.RetainingLceViewState;
 import com.yekong.droid.simpleapp.R;
 import com.yekong.droid.simpleapp.mvp.presenter.BasePagePresenter;
 import com.yekong.droid.simpleapp.mvp.view.BaseView;
-import com.yekong.droid.simpleapp.util.EventUtils;
+import com.yekong.droid.simpleapp.util.Eventer;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,8 +31,8 @@ import me.drakeet.multitype.MultiTypeAdapter;
  * Created by baoxiehao on 16/11/26.
  */
 
-public abstract class RecyclerPageFragment<M, V extends BaseView<M>, P extends BasePagePresenter<V, M>>
-        extends MvpLceViewStateFragment<MaterialRefreshLayout, M, V, P> {
+public abstract class RecyclerPageFragment<M, V extends BaseView<List<M>>, P extends BasePagePresenter<V, M>>
+        extends MvpLceViewStateFragment<MaterialRefreshLayout, List<M>, V, P> {
 
     @BindView(R.id.contentView)
     MaterialRefreshLayout mSwipeLayout;
@@ -38,7 +40,7 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<M>, P extends B
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
-    protected M mData;
+    protected List<M> mData;
     protected MultiTypeAdapter mAdapter;
 
     @Override
@@ -82,12 +84,18 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<M>, P extends B
     }
 
     @Override
-    public LceViewState<M, V> createViewState() {
+    public LceViewState<List<M>, V> createViewState() {
         return new RetainingLceViewState<>();
     }
 
     @Override
-    public M getData() {
+    public void loadData(boolean pullToRefresh) {
+        super.showLoading(pullToRefresh);
+        super.presenter.onRefreshData();
+    }
+
+    @Override
+    public List<M> getData() {
         return mData;
     }
 
@@ -101,10 +109,8 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<M>, P extends B
         loadData(true);
     }
 
-
-
     @Override
-    public void setData(M data) {
+    public void setData(List<M> data) {
         mData = data;
         mSwipeLayout.finishRefresh();
         mSwipeLayout.finishRefreshLoadMore();
@@ -122,7 +128,7 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<M>, P extends B
     }
 
     @Subscribe
-    public void onEventMainThread(EventUtils.TopEvent event) {
+    public void onEventMainThread(Eventer.TopEvent event) {
         LinearLayoutManager llm = ((LinearLayoutManager) mRecyclerView.getLayoutManager());
         llm.scrollToPosition(0);
     }

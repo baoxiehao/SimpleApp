@@ -1,7 +1,7 @@
 package com.yekong.droid.simpleapp.api;
 
-import com.yekong.droid.simpleapp.multitype.ZhiHuNews;
-import com.yekong.droid.simpleapp.util.ExLog;
+import com.yekong.droid.simpleapp.multitype.ZhiHu;
+import com.yekong.droid.simpleapp.util.Logger;
 
 import rx.Observable;
 
@@ -16,18 +16,18 @@ public class ZhiHuService {
         mZhiHuApi = zhiHuApi;
     }
 
-    public Observable<ZhiHuNews.ListResponse> getLatestNews() {
-        ExLog.d("getLatestNews()");
+    public Observable<ZhiHu.NewsResponse> getLatestNews() {
+        Logger.d("getLatestNews()");
         return mZhiHuApi.getLatestNews();
     }
 
-    public Observable<ZhiHuNews.ListResponse> getNewsBefore(int year, int month, int day) {
+    public Observable<ZhiHu.NewsResponse> getNewsBefore(int year, int month, int day) {
         String yyyyMMdd = String.format("%4d%02d%02d", year, month, day);
-        ExLog.d("getNewsBefore(): yyyyMMdd=%s", yyyyMMdd);
+        Logger.d("getNewsBefore(): yyyyMMdd=%s", yyyyMMdd);
         return mZhiHuApi.getNewsBefore(yyyyMMdd);
     }
 
-    public Observable<ZhiHuNews.DetailResponse> getNewsDetail(String id) {
+    public Observable<ZhiHu.NewsDetail> getNewsDetail(String id) {
         return mZhiHuApi.getNewsDetail(id);
     }
 }

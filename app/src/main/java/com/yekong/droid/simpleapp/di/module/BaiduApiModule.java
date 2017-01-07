@@ -1,7 +1,7 @@
 package com.yekong.droid.simpleapp.di.module;
 
 import com.yekong.droid.simpleapp.api.BaiduApi;
-import com.yekong.droid.simpleapp.di.BaiduImage;
+import com.yekong.droid.simpleapp.di.Baidu;
 
 import javax.inject.Singleton;
 
@@ -16,7 +16,7 @@ import retrofit2.Retrofit;
 public class BaiduApiModule {
     @Provides
     @Singleton
-    public BaiduApi provideBaiduApi(@BaiduImage  Retrofit retrofit) {
+    public BaiduApi provideBaiduApi(@Baidu Retrofit retrofit) {
         return retrofit.create(BaiduApi.class);
     }
 }

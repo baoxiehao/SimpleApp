@@ -4,7 +4,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.yekong.droid.simpleapp.di.BaiduImage;
+import com.yekong.droid.simpleapp.di.Baidu;
 import com.yekong.droid.simpleapp.di.Gank;
 import com.yekong.droid.simpleapp.di.Github;
 import com.yekong.droid.simpleapp.di.ZhiHu;
@@ -35,8 +35,8 @@ public class RetrofitModule {
 
     @Provides
     @Singleton
-    @BaiduImage
-    public Retrofit provideBaiduRetrofit(@BaiduImage Retrofit.Builder builder) {
+    @Baidu
+    public Retrofit provideBaiduRetrofit(@Baidu Retrofit.Builder builder) {
         return builder.baseUrl("http://image.baidu.com/").build();
     }
 
@@ -77,8 +77,8 @@ public class RetrofitModule {
 
     @Provides
     @Singleton
-    @BaiduImage
-    public Retrofit.Builder provideBaiduImageRetrofitBuilder(@BaiduImage Converter.Factory converterFactory) {
+    @Baidu
+    public Retrofit.Builder provideBaiduImageRetrofitBuilder(@Baidu Converter.Factory converterFactory) {
         return new Retrofit.Builder()
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .addConverterFactory(converterFactory);
@@ -93,8 +93,8 @@ public class RetrofitModule {
 
     @Provides
     @Singleton
-    @BaiduImage
-    public Converter.Factory provideBaiduImageConverterFactory(@BaiduImage Gson gson) {
+    @Baidu
+    public Converter.Factory provideBaiduImageConverterFactory(@Baidu Gson gson) {
         return GsonConverterFactory.create(gson);
     }
 
@@ -113,7 +113,7 @@ public class RetrofitModule {
 
     @Provides
     @Singleton
-    @BaiduImage
+    @Baidu
     Gson provideBaiduImageGson() {
         return new GsonBuilder()
                 .setPrettyPrinting()

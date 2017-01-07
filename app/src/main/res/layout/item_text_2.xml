@@ -22,13 +22,13 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/titleText"
+            android:id="@+id/primaryText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/List.Primary" />
 
         <TextView
-            android:id="@+id/publishedAtText"
+            android:id="@+id/secondaryText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/card_view_text_margin_v"

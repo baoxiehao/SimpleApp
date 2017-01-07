@@ -1,6 +1,6 @@
 package com.yekong.droid.simpleapp.api;
 
-import com.yekong.droid.simpleapp.multitype.ZhiHuNews;
+import com.yekong.droid.simpleapp.multitype.ZhiHu;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -12,11 +12,11 @@ import rx.Observable;
 
 public interface ZhiHuApi {
     @GET("news/latest")
-    Observable<ZhiHuNews.ListResponse> getLatestNews();
+    Observable<ZhiHu.NewsResponse> getLatestNews();
 
     @GET("news/before/{yyyyMMdd}")
-    Observable<ZhiHuNews.ListResponse> getNewsBefore(@Path("yyyyMMdd") String yyyyMMdd);
+    Observable<ZhiHu.NewsResponse> getNewsBefore(@Path("yyyyMMdd") String yyyyMMdd);
 
     @GET("news/{id}")
-    Observable<ZhiHuNews.DetailResponse> getNewsDetail(@Path("id") String id);
+    Observable<ZhiHu.NewsDetail> getNewsDetail(@Path("id") String id);
 }

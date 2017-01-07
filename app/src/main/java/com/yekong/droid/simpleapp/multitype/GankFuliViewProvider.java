@@ -9,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yekong.droid.simpleapp.R;
-import com.yekong.droid.simpleapp.util.UiUtils;
 import com.yekong.droid.simpleapp.mvp.common.UserCase;
 import com.yekong.droid.simpleapp.util.DateUtils;
+import com.yekong.droid.simpleapp.util.UiUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,23 +27,22 @@ public class GankFuliViewProvider
     @Override
     protected ViewHolder onCreateViewHolder(
             @NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
-        View root = inflater.inflate(R.layout.item_image_title, parent, false);
+        View root = inflater.inflate(R.layout.item_image_text, parent, false);
         return new ViewHolder(root);
     }
 
     @Override
     protected void onBindViewHolder(
-            @NonNull ViewHolder holder, @NonNull Gank.Fuli gankFuli) {
-        holder.mTitleText.setText(String.format("%s %s", DateUtils.dateToString(gankFuli.publishedAt), gankFuli.type));
-        UiUtils.loadImage(holder.mImageView, gankFuli.url);
-
-        holder.mImageView.setOnClickListener((view) -> UserCase.showImageFullscreen(gankFuli.desc, gankFuli.url));
+            @NonNull ViewHolder holder, @NonNull Gank.Fuli data) {
+        UiUtils.loadImage(holder.mImageView, data.url);
+        holder.mTextView.setText(String.format("%s %s", DateUtils.dateToString(data.publishedAt), data.type));
+        holder.mImageView.setOnClickListener((view) -> UserCase.showImageFullscreen(data.desc, data.url));
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.titleText)
-        TextView mTitleText;
+        @BindView(R.id.textView)
+        TextView mTextView;
 
         @BindView(R.id.imageView)
         ImageView mImageView;

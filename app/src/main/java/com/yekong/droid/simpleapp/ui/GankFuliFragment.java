@@ -2,9 +2,7 @@ package com.yekong.droid.simpleapp.ui;
 
 import com.yekong.droid.simpleapp.multitype.Gank;
 import com.yekong.droid.simpleapp.multitype.GankFuliViewProvider;
-import com.yekong.droid.simpleapp.mvp.contract.GankFuliContract;
-
-import java.util.List;
+import com.yekong.droid.simpleapp.mvp.contract.GankContract;
 
 import me.drakeet.multitype.MultiTypeAdapter;
 
@@ -13,18 +11,12 @@ import me.drakeet.multitype.MultiTypeAdapter;
  */
 
 public class GankFuliFragment extends RecyclerPageFragment<
-        List<Gank.Fuli>, GankFuliContract.View, GankFuliContract.Presenter>
-        implements GankFuliContract.View {
+        Gank.Fuli, GankContract.Fuli.View, GankContract.Fuli.Presenter>
+        implements GankContract.Fuli.View {
 
     @Override
-    public GankFuliContract.Presenter createPresenter() {
-        return new GankFuliContract.Presenter();
-    }
-
-    @Override
-    public void loadData(boolean pullToRefresh) {
-        super.showLoading(pullToRefresh);
-        super.presenter.onRefreshData();
+    public GankContract.Fuli.Presenter createPresenter() {
+        return new GankContract.Fuli.Presenter();
     }
 
     @Override

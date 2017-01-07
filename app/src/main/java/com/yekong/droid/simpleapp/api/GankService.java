@@ -15,11 +15,11 @@ public class GankService {
         mGankApi = gankApi;
     }
 
-    public Observable<Gank.FuliResponse> getFuli(int month, int day) {
-        return mGankApi.getFuli(month, day);
+    public Observable<Gank.FuliResponse> getFuli(int count, int page) {
+        return mGankApi.getFuli(count, page);
     }
 
-    public Observable<Gank.ArticleResponse> getArticle(String type, int month, int day) {
-        return mGankApi.getArticle(type, month, day);
+    public Observable<Gank.ArticleResponse> getArticle(String type, int count, int page) {
+        return mGankApi.getArticle(type, count, page);
     }
 }

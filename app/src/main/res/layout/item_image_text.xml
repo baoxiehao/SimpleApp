@@ -23,12 +23,12 @@
             android:scaleType="centerCrop" />
 
         <TextView
-            android:id="@+id/titleText"
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/card_view_content_margin_v"
             android:layout_marginStart="@dimen/card_view_image_text_margin"
             android:layout_marginTop="@dimen/card_view_text_margin_v"
-            android:textAppearance="@style/List.Secondary" />
+            style="@style/List.Secondary" />
     </LinearLayout>
 </android.support.v7.widget.CardView>

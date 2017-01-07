@@ -25,25 +25,25 @@ public class GankArticleViewProvider
     @Override
     protected ViewHolder onCreateViewHolder(
             @NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
-        View root = inflater.inflate(R.layout.item_gank_article, parent, false);
+        View root = inflater.inflate(R.layout.item_text_2, parent, false);
         return new ViewHolder(root);
     }
 
     @Override
     protected void onBindViewHolder(
-            @NonNull ViewHolder holder, @NonNull Gank.Article gankArticle) {
-        holder.mTitleText.setText(gankArticle.desc);
-        holder.mPublishedAtText.setText(DateUtils.dateToString(gankArticle.publishedAt));
-        holder.mTitleText.getRootView().setOnClickListener((view) -> UserCase.showWebView(gankArticle.url));
+            @NonNull ViewHolder holder, @NonNull Gank.Article data) {
+        holder.mPrimaryText.setText(data.desc);
+        holder.mSecondaryText.setText(DateUtils.dateToString(data.publishedAt));
+        holder.mPrimaryText.getRootView().setOnClickListener((view) -> UserCase.showWebView(data.url));
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.titleText)
-        TextView mTitleText;
+        @BindView(R.id.primaryText)
+        TextView mPrimaryText;
 
-        @BindView(R.id.publishedAtText)
-        TextView mPublishedAtText;
+        @BindView(R.id.secondaryText)
+        TextView mSecondaryText;
 
         ViewHolder(View itemView) {
             super(itemView);

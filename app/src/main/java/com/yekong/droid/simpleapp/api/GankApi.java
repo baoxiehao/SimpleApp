@@ -11,9 +11,11 @@ import rx.Observable;
  */
 
 public interface GankApi {
-    @GET("data/福利/{month}/{day}")
-    Observable<Gank.FuliResponse> getFuli(@Path("month") int month, @Path("day") int day);
+    int PAGE_SIZE = 15;
 
-    @GET("data/{type}/{month}/{day}")
-    Observable<Gank.ArticleResponse> getArticle(@Path("type") String type, @Path("month") int month, @Path("day") int day);
+    @GET("data/福利/{count}/{page}")
+    Observable<Gank.FuliResponse> getFuli(@Path("count") int count, @Path("page") int page);
+
+    @GET("data/{type}/{count}/{page}")
+    Observable<Gank.ArticleResponse> getArticle(@Path("type") String type, @Path("count") int count, @Path("page") int page);
 }

@@ -8,18 +8,18 @@ import me.drakeet.multitype.Item;
 /**
  * Created by baoxiehao on 16/11/27.
  */
-public class BaiduImage implements Item {
+public class Baidu implements Item {
 
-    public class Response {
+    public class ImagesResponse {
         public String col;
         public String tag;
         public int startIndex;
         public int returnNumber;
         public int totalNum;
-        public List<Entity> imgs;
+        public List<Image> imgs;
     }
 
-    public class Entity implements Item {
+    public class Image implements Item {
         public String title;
         public String desc;
         public Date date;

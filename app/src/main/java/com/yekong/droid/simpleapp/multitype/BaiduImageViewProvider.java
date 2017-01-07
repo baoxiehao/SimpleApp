@@ -21,30 +21,29 @@ import me.drakeet.multitype.ItemViewProvider;
  * Created by baoxiehao on 16/11/27.
  */
 public class BaiduImageViewProvider
-        extends ItemViewProvider<BaiduImage.Entity, BaiduImageViewProvider.ViewHolder> {
+        extends ItemViewProvider<Baidu.Image, BaiduImageViewProvider.ViewHolder> {
 
     @NonNull
     @Override
     protected ViewHolder onCreateViewHolder(
             @NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
-        View root = inflater.inflate(R.layout.item_image_title, parent, false);
+        View root = inflater.inflate(R.layout.item_image_text, parent, false);
         return new ViewHolder(root);
     }
 
     @Override
     protected void onBindViewHolder(
-            @NonNull ViewHolder holder, @NonNull BaiduImage.Entity baiduImage) {
-        holder.mTitleText.setText(String.format("%s %s", DateUtils.dateToString(baiduImage.date), baiduImage.title));
-        UiUtils.loadImage(holder.mImageView, baiduImage.imageUrl);
-
-        holder.mImageView.setOnClickListener(view -> UserCase.showImageFullscreen(baiduImage.title, baiduImage.imageUrl));
-        holder.mTitleText.setOnClickListener(view -> UserCase.showWebView(baiduImage.fromUrl));
+            @NonNull ViewHolder holder, @NonNull Baidu.Image data) {
+        UiUtils.loadImage(holder.mImageView, data.imageUrl);
+        holder.mTextView.setText(String.format("%s %s", DateUtils.dateToString(data.date), data.title));
+        holder.mImageView.setOnClickListener(view -> UserCase.showImageFullscreen(data.title, data.imageUrl));
+        holder.mTextView.setOnClickListener(view -> UserCase.showWebView(data.fromUrl));
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.titleText)
-        TextView mTitleText;
+        @BindView(R.id.textView)
+        TextView mTextView;
 
         @BindView(R.id.imageView)
         ImageView mImageView;

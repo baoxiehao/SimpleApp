@@ -25,28 +25,28 @@ import rx.schedulers.Schedulers;
  * Created by baoxiehao on 16/11/26.
  */
 public class ZhiHuNewsViewProvider
-        extends ItemViewProvider<ZhiHuNews.ListItem, ZhiHuNewsViewProvider.ViewHolder> {
+        extends ItemViewProvider<ZhiHu.News, ZhiHuNewsViewProvider.ViewHolder> {
 
     @NonNull
     @Override
     protected ViewHolder onCreateViewHolder(
             @NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
-        View root = inflater.inflate(R.layout.item_zhihu_news, parent, false);
+        View root = inflater.inflate(R.layout.item_image_text_2, parent, false);
         return new ViewHolder(root);
     }
 
     @Override
     protected void onBindViewHolder(
-            @NonNull ViewHolder holder, @NonNull ZhiHuNews.ListItem news) {
-        final String title = news.title;
-        final String imageUrl = news.images.get(0);
+            @NonNull ViewHolder holder, @NonNull ZhiHu.News data) {
+        final String title = data.title;
+        final String imageUrl = data.images.get(0);
 
         UiUtils.loadImage(holder.mImageView, imageUrl);
-        holder.mTitleText.setText(title);
-        holder.mSubTitleText.setText(DateUtils.dateToString(news.date));
+        holder.mPrimaryText.setText(title);
+        holder.mSecondaryText.setText(DateUtils.dateToString(data.date));
 
         holder.mImageView.getRootView().setOnClickListener((view) -> {
-            SimpleApp.getAppComponent().getZhiHuService().getNewsDetail(news.id)
+            SimpleApp.getAppComponent().getZhiHuService().getNewsDetail(data.id)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(newsDetail -> {
@@ -62,11 +62,11 @@ public class ZhiHuNewsViewProvider
         @BindView(R.id.imageView)
         ImageView mImageView;
 
-        @BindView(R.id.titleText)
-        TextView mTitleText;
+        @BindView(R.id.primaryText)
+        TextView mPrimaryText;
 
-        @BindView(R.id.subTitleText)
-        TextView mSubTitleText;
+        @BindView(R.id.secondaryText)
+        TextView mSecondaryText;
 
         ViewHolder(View itemView) {
             super(itemView);

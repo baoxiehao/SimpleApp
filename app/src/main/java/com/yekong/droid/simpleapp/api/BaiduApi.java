@@ -1,6 +1,6 @@
 package com.yekong.droid.simpleapp.api;
 
-import com.yekong.droid.simpleapp.multitype.BaiduImage;
+import com.yekong.droid.simpleapp.multitype.Baidu;
 
 import java.util.Map;
 
@@ -14,5 +14,5 @@ import rx.Observable;
 
 public interface BaiduApi {
     @GET("data/imgs")
-    Observable<BaiduImage.Response> searchImages(@QueryMap Map<String, String> options);
+    Observable<Baidu.ImagesResponse> searchImages(@QueryMap Map<String, String> options);
 }

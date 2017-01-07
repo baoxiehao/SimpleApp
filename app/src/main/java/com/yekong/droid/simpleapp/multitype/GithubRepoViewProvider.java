@@ -23,22 +23,24 @@ public class GithubRepoViewProvider
     @Override
     protected ViewHolder onCreateViewHolder(
             @NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
-        View root = inflater.inflate(R.layout.item_github_repo, parent, false);
+        View root = inflater.inflate(R.layout.item_text_2, parent, false);
         return new ViewHolder(root);
     }
 
     @Override
     protected void onBindViewHolder(
             @NonNull ViewHolder holder, @NonNull GithubRepo githubRepo) {
-        holder.mTitleText.setText(githubRepo.getName());
-        holder.mSubTitleText.setText(githubRepo.getDesc());
+        holder.mPrimaryText.setText(githubRepo.getName());
+        holder.mSecondaryText.setText(githubRepo.getDesc());
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.title)
-        TextView mTitleText;
-        @BindView(R.id.sub_title)
-        TextView mSubTitleText;
+
+        @BindView(R.id.primaryText)
+        TextView mPrimaryText;
+
+        @BindView(R.id.secondaryText)
+        TextView mSecondaryText;
 
         ViewHolder(View itemView) {
             super(itemView);

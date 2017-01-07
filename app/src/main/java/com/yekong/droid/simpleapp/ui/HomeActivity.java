@@ -17,7 +17,7 @@ import android.view.View;
 
 import com.yekong.droid.simpleapp.R;
 import com.yekong.droid.simpleapp.mvp.common.UserCase;
-import com.yekong.droid.simpleapp.util.EventUtils;
+import com.yekong.droid.simpleapp.util.Eventer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,10 +77,11 @@ public class HomeActivity extends AppCompatActivity
 
     private void initViewPager() {
         final FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
-        adapter.addFragment(new ZhiHuNewsFragment(), "ZhiHu");
+        adapter.addFragment(new ZhiHuFragment(), "ZhiHu");
         adapter.addFragment(new GankArticleFragment(), "Gank");
-        adapter.addFragment(new BaiduImageFragment(), "Baidu");
         adapter.addFragment(new GankFuliFragment(), "Fuli");
+        adapter.addFragment(new BaiduImageFragment(), "Baidu");
+//        adapter.addFragment(new GithubFragment(), "Github");
         if (mViewPager != null) {
             mViewPager.setAdapter(adapter);
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
@@ -90,7 +91,7 @@ public class HomeActivity extends AppCompatActivity
 
     @OnClick(R.id.fab)
     void initFab() {
-        EventUtils.TopEvent.send();
+        Eventer.TopEvent.send();
 //        Snackbar.make(mFab, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                .setAction("Action", view -> Toaster.quick("Action done")).show();
     }

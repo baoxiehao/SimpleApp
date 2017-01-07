@@ -6,7 +6,7 @@ import org.greenrobot.eventbus.EventBus;
  * Created by baoxiehao on 16/12/1.
  */
 
-public class EventUtils {
+public class Eventer {
 
     public static class TopEvent {
         public static void send() {

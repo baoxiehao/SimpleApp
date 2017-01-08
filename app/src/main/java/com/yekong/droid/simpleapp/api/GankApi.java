@@ -11,7 +11,7 @@ import rx.Observable;
  */
 
 public interface GankApi {
-    int PAGE_SIZE = 15;
+    int PAGE_SIZE = 20;
 
     @GET("data/福利/{count}/{page}")
     Observable<Gank.FuliResponse> getFuli(@Path("count") int count, @Path("page") int page);

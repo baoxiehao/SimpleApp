@@ -6,20 +6,33 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.github.piasy.biv.view.BigImageView;
 import com.github.piasy.biv.view.ImageSaveCallback;
+import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 import com.yekong.droid.simpleapp.R;
+import com.yekong.droid.simpleapp.util.Eventer;
 import com.yekong.droid.simpleapp.util.Toaster;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ImageActivity extends AppCompatActivity {
+    public static final String ACTION = "com.yekong.droid.simpleapp.action.VIEW_IMAGE";
+    public static final String EXTRA_TITLES = "EXTRA_TITLES";
+    public static final String EXTRA_URLS = "EXTRA_URLS";
+    public static final String EXTRA_POS = "EXTRA_POS";
+
     private static final boolean AUTO_HIDE = true;
 
     private static final int AUTO_HIDE_DELAY_MILLIS = 2000;
@@ -34,8 +47,8 @@ public class ImageActivity extends AppCompatActivity {
 
     private boolean mVisible;
 
-    @BindView(R.id.bigImageView)
-    BigImageView mBigImageView;
+    @BindView(R.id.recyclerViewPager)
+    RecyclerViewPager mRecyclerViewPager;
 
     @BindView(R.id.saveImageButton)
     Button mSaveImageButton;
@@ -101,37 +114,35 @@ public class ImageActivity extends AppCompatActivity {
     private void setupContentView() {
         mVisible = true;
 
-        getSupportActionBar().setTitle(getIntent().getStringExtra("title"));
+        final ArrayList<String> titles = getIntent().getStringArrayListExtra(EXTRA_TITLES);
+        final ArrayList<String> urls = getIntent().getStringArrayListExtra(EXTRA_URLS);
+        final int pos = getIntent().getIntExtra(EXTRA_POS, 0);
+
+        getSupportActionBar().setTitle(titles.get(pos));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Set up the user interaction to manually show or hide the system UI.
-        mBigImageView.setOnClickListener(view -> toggle());
+        LinearLayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerViewPager.setLayoutManager(layout);
+
+        BaseQuickAdapter adapter = new ImageAdapter(urls);
+        adapter.openLoadAnimation();
+        mRecyclerViewPager.setAdapter(adapter);
+        mRecyclerViewPager.scrollToPosition(pos);
+        mRecyclerViewPager.addOnPageChangedListener((currPos, newPos) -> {
+            getSupportActionBar().setTitle(titles.get(newPos));
+        });
 
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         mSaveImageButton.setOnTouchListener(mDelayHideTouchListener);
-        mBigImageView.showImage(Uri.parse(getIntent().getStringExtra("imageUrl")));
-        mBigImageView.setOnLongClickListener((view) -> {
-            saveImage();
-            return true;
-        });
-        mBigImageView.setImageSaveCallback(new ImageSaveCallback() {
-            @Override
-            public void onSuccess(String uri) {
-                Toaster.quick("Save done!");
-            }
-
-            @Override
-            public void onFail(Throwable t) {
-                Toaster.quick("Save failed!");
-            }
-        });
     }
 
     @OnClick(R.id.saveImageButton)
     public void onClick(View view) {
-        saveImage();
+        BigImageView bigImageView = (BigImageView) mRecyclerViewPager.getChildAt(
+                mRecyclerViewPager.getCurrentPosition()).findViewById(R.id.bigImageView);
+        bigImageView.saveImageIntoGallery();
     }
 
     @Override
@@ -143,10 +154,6 @@ public class ImageActivity extends AppCompatActivity {
             }
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void saveImage() {
-        mBigImageView.saveImageIntoGallery();
     }
 
     @Override
@@ -180,7 +187,7 @@ public class ImageActivity extends AppCompatActivity {
     @SuppressLint("InlinedApi")
     private void show() {
         // Show the system bar
-        mBigImageView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        mRecyclerViewPager.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         mVisible = true;
 
@@ -189,5 +196,41 @@ public class ImageActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mExitFullscreenRunnable, UI_ANIMATION_DELAY);
 
         mHideHandler.postDelayed(() -> hide(), UI_ANIMATION_DELAY + AUTO_HIDE_DELAY_MILLIS);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Eventer.PositionEvent.send(mRecyclerViewPager.getCurrentPosition());
+    }
+
+    class ImageAdapter extends BaseQuickAdapter<String> {
+
+        public ImageAdapter(List<String> data) {
+            super(R.layout.item_image, data);
+        }
+
+        @Override
+        protected void convert(BaseViewHolder baseViewHolder, String s) {
+            BigImageView bigImageView = baseViewHolder.getView(R.id.bigImageView);
+            bigImageView.showImage(Uri.parse(s));
+            // Set up the user interaction to manually show or hide the system UI.
+            bigImageView.setOnClickListener(view -> toggle());
+            bigImageView.setOnLongClickListener((view) -> {
+                bigImageView.saveImageIntoGallery();
+                return true;
+            });
+            bigImageView.setImageSaveCallback(new ImageSaveCallback() {
+                @Override
+                public void onSuccess(String uri) {
+                    Toaster.quick("Save done!");
+                }
+
+                @Override
+                public void onFail(Throwable t) {
+                    Toaster.quick("Save failed!");
+                }
+            });
+        }
     }
 }

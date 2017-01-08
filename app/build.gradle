@@ -84,6 +84,8 @@ dependencies {
     compile "io.reactivex:rxandroid:$rx"
 
     compile 'com.thefinestartist:finestwebview:1.2.7'
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v1.9.7'
+    compile 'com.github.lsjwzh.RecyclerViewPager:lib:v1.1.2'
 
     testCompile 'junit:junit:4.12'
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife"

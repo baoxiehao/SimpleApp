@@ -25,7 +25,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import me.drakeet.multitype.MultiTypeAdapter;
 
 /**
  * Created by baoxiehao on 16/11/26.
@@ -41,7 +40,8 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<List<M>>, P ext
     RecyclerView mRecyclerView;
 
     protected List<M> mData;
-    protected MultiTypeAdapter mAdapter;
+    protected RecyclerView.Adapter mAdapter;
+    protected boolean mShowingDetail;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -133,5 +133,15 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<List<M>>, P ext
         llm.scrollToPosition(0);
     }
 
-    protected abstract MultiTypeAdapter setupAdapter();
+    @Subscribe
+    public void onEventMainThread(Eventer.PositionEvent event) {
+        if (!mShowingDetail) {
+            return;
+        }
+        LinearLayoutManager llm = ((LinearLayoutManager) mRecyclerView.getLayoutManager());
+        llm.scrollToPosition(event.pos);
+        mShowingDetail = false;
+    }
+
+    protected abstract RecyclerView.Adapter setupAdapter();
 }

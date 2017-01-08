@@ -5,6 +5,9 @@ import android.content.Intent;
 import com.thefinestartist.finestwebview.FinestWebView;
 import com.yekong.droid.simpleapp.R;
 import com.yekong.droid.simpleapp.app.SimpleApp;
+import com.yekong.droid.simpleapp.ui.ImageActivity;
+
+import java.util.ArrayList;
 
 /**
  * Created by baoxiehao on 16/11/29.
@@ -12,11 +15,12 @@ import com.yekong.droid.simpleapp.app.SimpleApp;
 
 public class UserCase {
 
-    public static void showImageFullscreen(String title, String imageUrl) {
-        Intent intent = new Intent("com.yekong.droid.simpleapp.action.VIEW_IMAGE");
+    public static void showImages(ArrayList<String> titles, ArrayList<String> urls, int position) {
+        Intent intent = new Intent(ImageActivity.ACTION);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("title", title);
-        intent.putExtra("imageUrl", imageUrl);
+        intent.putStringArrayListExtra(ImageActivity.EXTRA_TITLES, titles);
+        intent.putStringArrayListExtra(ImageActivity.EXTRA_URLS, urls);
+        intent.putExtra(ImageActivity.EXTRA_POS, position);
         SimpleApp.getAppComponent().getContext().startActivity(intent);
     }
 

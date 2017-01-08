@@ -13,4 +13,16 @@ public class Eventer {
             EventBus.getDefault().post(new TopEvent());
         }
     }
+
+    public static class PositionEvent {
+        public int pos;
+
+        public PositionEvent(int pos) {
+            this.pos = pos;
+        }
+
+        public static void send(int pos) {
+            EventBus.getDefault().post(new PositionEvent(pos));
+        }
+    }
 }

@@ -14,7 +14,7 @@ import rx.Observable;
  */
 
 public interface GithubApi {
-    int REPO_PAGE_SIZE = 3;
+    int REPO_PAGE_SIZE = 10;
 
     @GET("users/{login}/repos")
     Observable<List<GithubRepo>> getUserRepos(

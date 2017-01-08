@@ -1,10 +1,18 @@
 package com.yekong.droid.simpleapp.ui;
 
-import com.yekong.droid.simpleapp.multitype.Gank;
-import com.yekong.droid.simpleapp.multitype.GankFuliViewProvider;
-import com.yekong.droid.simpleapp.mvp.contract.GankContract;
+import android.support.v7.widget.RecyclerView;
 
-import me.drakeet.multitype.MultiTypeAdapter;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
+import com.yekong.droid.simpleapp.R;
+import com.yekong.droid.simpleapp.multitype.Gank;
+import com.yekong.droid.simpleapp.mvp.common.UserCase;
+import com.yekong.droid.simpleapp.mvp.contract.GankContract;
+import com.yekong.droid.simpleapp.util.DateUtils;
+import com.yekong.droid.simpleapp.util.UiUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by baoxiehao on 16/11/28.
@@ -20,9 +28,31 @@ public class GankFuliFragment extends RecyclerPageFragment<
     }
 
     @Override
-    protected MultiTypeAdapter setupAdapter() {
-        MultiTypeAdapter adapter = new MultiTypeAdapter(mData);
-        adapter.register(Gank.Fuli.class, new GankFuliViewProvider());
+    protected RecyclerView.Adapter setupAdapter() {
+        ListAdapter adapter = new ListAdapter(mData);
+        adapter.setOnRecyclerViewItemClickListener((view, pos) -> {
+            ArrayList<String> titles = new ArrayList<>();
+            ArrayList<String> urls = new ArrayList<>();
+            for (Gank.Fuli fuli : mData) {
+                titles.add(fuli.desc);
+                urls.add(fuli.url);
+            }
+            UserCase.showImages(titles, urls, pos);
+            mShowingDetail = true;
+        });
         return adapter;
+    }
+
+    class ListAdapter extends BaseQuickAdapter<Gank.Fuli> {
+        public ListAdapter(List<Gank.Fuli> data) {
+            super(R.layout.item_image_text, data);
+        }
+
+        @Override
+        protected void convert(BaseViewHolder baseViewHolder, Gank.Fuli fuli) {
+            UiUtils.loadImage(baseViewHolder.getView(R.id.imageView), fuli.url);
+            baseViewHolder.setText(R.id.textView,
+                    String.format("%s %s", DateUtils.dateToString(fuli.publishedAt), fuli.type));
+        }
     }
 }

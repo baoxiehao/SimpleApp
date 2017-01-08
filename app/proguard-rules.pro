@@ -24,3 +24,6 @@
 }
 -keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 
+-keep class com.lsjwzh.widget.recyclerviewpager.**
+-dontwarn com.lsjwzh.widget.recyclerviewpager.**
+

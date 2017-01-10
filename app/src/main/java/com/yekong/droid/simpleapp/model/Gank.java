@@ -1,9 +1,7 @@
-package com.yekong.droid.simpleapp.multitype;
+package com.yekong.droid.simpleapp.model;
 
 import java.util.Date;
 import java.util.List;
-
-import me.drakeet.multitype.Item;
 
 /**
  * Created by baoxiehao on 16/11/28.
@@ -40,7 +38,7 @@ public class Gank {
         public List<Fuli> results;
     }
 
-    private class Entity implements Item {
+    private class Entity {
         public String who;
         public String createdAt;
         public Date publishedAt;

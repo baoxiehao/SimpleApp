@@ -40,7 +40,7 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<List<M>>, P ext
     RecyclerView mRecyclerView;
 
     protected List<M> mData;
-    protected RecyclerView.Adapter mAdapter;
+    protected BaseAdapter mAdapter;
     protected boolean mShowingDetail;
 
     @Override
@@ -66,10 +66,10 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<List<M>>, P ext
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        initSwipeLayout();
+        initViews();
     }
 
-    private void initSwipeLayout() {
+    private void initViews() {
         mSwipeLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
             @Override
             public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
@@ -143,5 +143,5 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<List<M>>, P ext
         mShowingDetail = false;
     }
 
-    protected abstract RecyclerView.Adapter setupAdapter();
+    protected abstract BaseAdapter setupAdapter();
 }

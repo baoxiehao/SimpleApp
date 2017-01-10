@@ -1,10 +1,13 @@
 package com.yekong.droid.simpleapp.ui;
 
-import com.yekong.droid.simpleapp.multitype.Gank;
-import com.yekong.droid.simpleapp.multitype.GankArticleViewProvider;
+import com.chad.library.adapter.base.BaseViewHolder;
+import com.yekong.droid.simpleapp.R;
+import com.yekong.droid.simpleapp.model.Gank;
+import com.yekong.droid.simpleapp.mvp.common.UserCase;
 import com.yekong.droid.simpleapp.mvp.contract.GankContract;
+import com.yekong.droid.simpleapp.util.DateUtils;
 
-import me.drakeet.multitype.MultiTypeAdapter;
+import java.util.List;
 
 /**
  * Created by baoxiehao on 16/11/28.
@@ -20,9 +23,23 @@ public class GankArticleFragment extends RecyclerPageFragment<
     }
 
     @Override
-    protected MultiTypeAdapter setupAdapter() {
-        MultiTypeAdapter adapter = new MultiTypeAdapter(mData);
-        adapter.register(Gank.Article.class, new GankArticleViewProvider());
+    protected BaseAdapter setupAdapter() {
+        ListAdapter adapter = new ListAdapter(mData);
+        adapter.setOnRecyclerViewItemClickListener((view, pos) -> UserCase.showWebView(mData.get(pos).url));
         return adapter;
+    }
+
+    class ListAdapter extends BaseAdapter<Gank.Article> {
+
+        public ListAdapter(List<Gank.Article> data) {
+            super(R.layout.item_text_2, data);
+        }
+
+        @Override
+        protected void convert(BaseViewHolder baseViewHolder, Gank.Article article) {
+            baseViewHolder.setText(R.id.primaryText, article.desc);
+            baseViewHolder.setText(R.id.secondaryText, String.format("%s %s",
+                    DateUtils.dateToString(article.publishedAt), article.who));
+        }
     }
 }

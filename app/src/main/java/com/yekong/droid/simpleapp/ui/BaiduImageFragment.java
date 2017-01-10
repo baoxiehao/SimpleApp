@@ -1,11 +1,8 @@
 package com.yekong.droid.simpleapp.ui;
 
-import android.support.v7.widget.RecyclerView;
-
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.yekong.droid.simpleapp.R;
-import com.yekong.droid.simpleapp.multitype.Baidu;
+import com.yekong.droid.simpleapp.model.Baidu;
 import com.yekong.droid.simpleapp.mvp.common.UserCase;
 import com.yekong.droid.simpleapp.mvp.contract.BaiduContract;
 import com.yekong.droid.simpleapp.util.DateUtils;
@@ -28,7 +25,7 @@ public class BaiduImageFragment extends RecyclerPageFragment<
     }
 
     @Override
-    protected RecyclerView.Adapter setupAdapter() {
+    protected BaseAdapter setupAdapter() {
         ListAdapter adapter = new ListAdapter(mData);
         adapter.setOnRecyclerViewItemClickListener((view, pos) -> {
             ArrayList<String> titles = new ArrayList<>();
@@ -43,7 +40,7 @@ public class BaiduImageFragment extends RecyclerPageFragment<
         return adapter;
     }
 
-    class ListAdapter extends BaseQuickAdapter<Baidu.Image> {
+    class ListAdapter extends BaseAdapter<Baidu.Image> {
         public ListAdapter(List<Baidu.Image> data) {
             super(R.layout.item_image_text, data);
         }

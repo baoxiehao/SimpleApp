@@ -1,12 +1,19 @@
 package com.yekong.droid.simpleapp.ui;
 
-import com.yekong.droid.simpleapp.multitype.ZhiHu;
-import com.yekong.droid.simpleapp.multitype.ZhiHuNewsViewProvider;
+import com.chad.library.adapter.base.BaseViewHolder;
+import com.yekong.droid.simpleapp.R;
+import com.yekong.droid.simpleapp.app.SimpleApp;
+import com.yekong.droid.simpleapp.model.ZhiHu;
+import com.yekong.droid.simpleapp.mvp.common.UserCase;
 import com.yekong.droid.simpleapp.mvp.contract.ZhiHuContract;
+import com.yekong.droid.simpleapp.util.DateUtils;
+import com.yekong.droid.simpleapp.util.Toaster;
+import com.yekong.droid.simpleapp.util.UiUtils;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import me.drakeet.multitype.MultiTypeAdapter;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by baoxiehao on 16/11/28.
@@ -22,9 +29,35 @@ public class ZhiHuFragment extends RecyclerPageFragment<
     }
 
     @Override
-    protected MultiTypeAdapter setupAdapter() {
-        MultiTypeAdapter adapter = new MultiTypeAdapter(mData != null ? mData : new ArrayList<>());
-        adapter.register(ZhiHu.News.class, new ZhiHuNewsViewProvider());
+    protected BaseAdapter setupAdapter() {
+        ListAdapter adapter = new ListAdapter(mData);
+        adapter.setOnRecyclerViewItemClickListener((view, pos) -> {
+            SimpleApp.getAppComponent().getZhiHuService().getNewsDetail(mData.get(pos).id)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(newsDetail -> {
+                        UserCase.showWebView(newsDetail.share_url);
+                    }, error -> {
+                        Toaster.quick(error.getMessage());
+                    });
+        });
         return adapter;
+    }
+
+    class ListAdapter extends BaseAdapter<ZhiHu.News> {
+
+        public ListAdapter(List<ZhiHu.News> data) {
+            super(R.layout.item_image_text_2, data);
+        }
+
+        @Override
+        protected void convert(BaseViewHolder baseViewHolder, ZhiHu.News news) {
+            final String title = news.title;
+            final String imageUrl = news.images.get(0);
+
+            UiUtils.loadImage(baseViewHolder.getView(R.id.imageView), imageUrl);
+            baseViewHolder.setText(R.id.primaryText, title);
+            baseViewHolder.setText(R.id.secondaryText, DateUtils.dateToString(news.date));
+        }
     }
 }

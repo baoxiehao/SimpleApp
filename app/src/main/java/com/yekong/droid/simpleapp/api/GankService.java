@@ -1,6 +1,6 @@
 package com.yekong.droid.simpleapp.api;
 
-import com.yekong.droid.simpleapp.multitype.Gank;
+import com.yekong.droid.simpleapp.model.Gank;
 
 import rx.Observable;
 

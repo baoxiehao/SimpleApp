@@ -1,7 +1,7 @@
 package com.yekong.droid.simpleapp.mvp.contract;
 
 import com.yekong.droid.simpleapp.app.SimpleApp;
-import com.yekong.droid.simpleapp.multitype.ZhiHu;
+import com.yekong.droid.simpleapp.model.ZhiHu;
 import com.yekong.droid.simpleapp.mvp.presenter.BasePagePresenter;
 import com.yekong.droid.simpleapp.mvp.view.BaseView;
 

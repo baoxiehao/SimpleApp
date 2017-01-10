@@ -1,16 +1,14 @@
-package com.yekong.droid.simpleapp.multitype;
+package com.yekong.droid.simpleapp.model;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-import me.drakeet.multitype.Item;
-
 /**
  * Created by baoxiehao on 16/11/26.
  */
 
-public class GithubRepo implements Item {
+public class GithubRepo {
     private int mId;
     private String mName;
     private String mFullName;

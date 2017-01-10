@@ -2,7 +2,7 @@ package com.yekong.droid.simpleapp.mvp.contract;
 
 import com.yekong.droid.simpleapp.api.GankApi;
 import com.yekong.droid.simpleapp.app.SimpleApp;
-import com.yekong.droid.simpleapp.multitype.Gank;
+import com.yekong.droid.simpleapp.model.Gank;
 import com.yekong.droid.simpleapp.mvp.presenter.BasePagePresenter;
 import com.yekong.droid.simpleapp.mvp.view.BaseView;
 

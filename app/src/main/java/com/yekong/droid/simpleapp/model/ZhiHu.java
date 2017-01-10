@@ -1,4 +1,4 @@
-package com.yekong.droid.simpleapp.multitype;
+package com.yekong.droid.simpleapp.model;
 
 /**
  * Created by mi on 16-11-29.
@@ -6,8 +6,6 @@ package com.yekong.droid.simpleapp.multitype;
 
 import java.util.Date;
 import java.util.List;
-
-import me.drakeet.multitype.Item;
 
 /**
      {
@@ -59,14 +57,14 @@ public class ZhiHu {
         public List<News> stories;
     }
 
-    public class News implements Item {
+    public class News {
         public String title;
         public List<String> images;
         public String id;
         public Date date;
     }
 
-    public class NewsDetail implements Item {
+    public class NewsDetail {
         public String title;
         public String image;
         public String share_url;

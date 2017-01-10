@@ -1,6 +1,6 @@
 package com.yekong.droid.simpleapp.api;
 
-import com.yekong.droid.simpleapp.multitype.ZhiHu;
+import com.yekong.droid.simpleapp.model.ZhiHu;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;

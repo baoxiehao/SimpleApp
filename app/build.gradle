@@ -53,10 +53,6 @@ dependencies {
 
     compile "org.greenrobot:eventbus:$eventbus"
 
-    compile('me.drakeet.multitype:multitype:2.2.1', {
-        exclude group: 'com.android.support'
-    })
-
     compile "com.jakewharton:butterknife:$butterknife"
     apt "com.jakewharton:butterknife-compiler:$butterknife"
 

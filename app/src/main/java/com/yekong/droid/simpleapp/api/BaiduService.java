@@ -1,6 +1,6 @@
 package com.yekong.droid.simpleapp.api;
 
-import com.yekong.droid.simpleapp.multitype.Baidu;
+import com.yekong.droid.simpleapp.model.Baidu;
 
 import java.util.HashMap;
 import java.util.Map;

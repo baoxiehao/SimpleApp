@@ -1,14 +1,12 @@
-package com.yekong.droid.simpleapp.multitype;
+package com.yekong.droid.simpleapp.model;
 
 import java.util.Date;
 import java.util.List;
 
-import me.drakeet.multitype.Item;
-
 /**
  * Created by baoxiehao on 16/11/27.
  */
-public class Baidu implements Item {
+public class Baidu {
 
     public class ImagesResponse {
         public String col;
@@ -19,7 +17,7 @@ public class Baidu implements Item {
         public List<Image> imgs;
     }
 
-    public class Image implements Item {
+    public class Image {
         public String title;
         public String desc;
         public Date date;

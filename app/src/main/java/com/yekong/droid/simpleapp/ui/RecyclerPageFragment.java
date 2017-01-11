@@ -43,6 +43,16 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<List<M>>, P ext
     protected BaseAdapter mAdapter;
     protected boolean mShowingDetail;
 
+    private String mTitle;
+
+    public String getTitle() {
+        return mTitle;
+    }
+
+    public void setTitle(String title) {
+        this.mTitle = title;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

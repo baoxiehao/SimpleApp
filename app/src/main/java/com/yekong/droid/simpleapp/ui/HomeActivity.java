@@ -11,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -34,6 +33,8 @@ public class HomeActivity extends AppCompatActivity
 
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
+
+    FragmentAdapter mAdapter;
 
     @BindView(R.id.fab)
     FloatingActionButton mFab;
@@ -76,14 +77,12 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void initViewPager() {
-        final FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
-        adapter.addFragment(new ZhiHuFragment(), "ZhiHu");
-        adapter.addFragment(new GankArticleFragment(), "Gank");
-        adapter.addFragment(new GankFuliFragment(), "Fuli");
-        adapter.addFragment(new BaiduImageFragment(), "Baidu");
-//        adapter.addFragment(new GithubFragment(), "Github");
+        mAdapter = new FragmentAdapter(getSupportFragmentManager());
+        mAdapter.addFragments(
+                getString(R.string.fragment_title_zhihu),
+                getString(R.string.fragment_title_gank));
         if (mViewPager != null) {
-            mViewPager.setAdapter(adapter);
+            mViewPager.setAdapter(mAdapter);
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
             tabLayout.setupWithViewPager(mViewPager);
         }
@@ -105,27 +104,27 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.home, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -133,8 +132,18 @@ public class HomeActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_rss) {
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_news) {
+            mAdapter.addFragments(
+                    getString(R.string.fragment_title_zhihu),
+                    getString(R.string.fragment_title_gank));
+            mAdapter.notifyDataSetChanged();
+            mViewPager.setCurrentItem(0);
+        } else if (id == R.id.nav_pics) {
+            mAdapter.addFragments(
+                    getString(R.string.fragment_title_fuli),
+                    getString(R.string.fragment_title_baidu));
+            mAdapter.notifyDataSetChanged();
+            mViewPager.setCurrentItem(0);
         } else if (id == R.id.nav_share) {
         } else if (id == R.id.nav_setting) {
         }

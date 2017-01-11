@@ -39,7 +39,7 @@ public class GankArticleFragment extends RecyclerPageFragment<
         protected void convert(BaseViewHolder baseViewHolder, Gank.Article article) {
             baseViewHolder.setText(R.id.primaryText, article.desc);
             baseViewHolder.setText(R.id.secondaryText, String.format("%s %s",
-                    DateUtils.dateToString(article.publishedAt), article.who));
+                    DateUtils.dateToString(article.publishedAt), article.who != null ? article.who : ""));
         }
     }
 }

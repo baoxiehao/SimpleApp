@@ -24,7 +24,9 @@ public class SimpleApp extends Application {
         sAppComponent = DaggerAppComponent.builder()
                 .contextModule(new ContextModule(this))
                 .build();
-        BigImageViewer.initialize(GlideImageLoader.with(this));
+
+        BigImageViewer.initialize(
+                GlideImageLoader.with(SimpleApp.getAppComponent().getContext()));
     }
 
     public static AppComponent getAppComponent() {

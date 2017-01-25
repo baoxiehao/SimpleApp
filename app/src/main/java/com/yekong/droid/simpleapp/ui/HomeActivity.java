@@ -9,21 +9,24 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 
+import com.luseen.luseenbottomnavigation.BottomNavigation.BottomNavigationItem;
+import com.luseen.luseenbottomnavigation.BottomNavigation.BottomNavigationView;
+import com.ogaclejapan.arclayout.ArcLayout;
 import com.yekong.droid.simpleapp.R;
 import com.yekong.droid.simpleapp.mvp.common.UserCase;
-import com.yekong.droid.simpleapp.util.Eventer;
+import com.yekong.droid.simpleapp.ui.base.BaseActivity;
+import com.yekong.droid.simpleapp.util.ArcLayoutUtils;
+import com.yekong.droid.simpleapp.util.EventUtils;
+import com.yekong.droid.simpleapp.util.Logger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends BaseActivity {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -42,6 +45,21 @@ public class HomeActivity extends AppCompatActivity
     @BindView(R.id.nav_view)
     NavigationView mNavView;
 
+    @BindView(R.id.bottomNavView)
+    BottomNavigationView mBottomNavView;
+
+    @BindView(R.id.menu_layout)
+    View mMenuLayout;
+
+    @BindView(R.id.arc_layout)
+    ArcLayout mArcLayout;
+
+    @Override
+    protected void onFirstFrameDisplayed() {
+        super.onFirstFrameDisplayed();
+        Logger.d("onFirstFrameDisplayed");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme_NoActionBar);
@@ -53,7 +71,14 @@ public class HomeActivity extends AppCompatActivity
 
     private void initView() {
         setSupportActionBar(mToolbar);
+        initDrawerLayout();
+        initNavView();
+        initViewPager();
+        initBottomNavView();
+        initArcLayout();
+    }
 
+    private void initDrawerLayout() {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar,
                 R.string.navigation_drawer_open,
@@ -70,29 +95,110 @@ public class HomeActivity extends AppCompatActivity
                 });
             }
         });
+    }
 
-        mNavView.setNavigationItemSelectedListener(this);
+    private void initNavView() {
+        mNavView.setNavigationItemSelectedListener(item -> {
+            // Handle navigation view item clicks here.
+            int id = item.getItemId();
 
-        initViewPager();
+            if (id == R.id.nav_news) {
+                mBottomNavView.selectTab(0);
+            } else if (id == R.id.nav_pics) {
+                mBottomNavView.selectTab(1);
+            } else if (id == R.id.nav_share) {
+            } else if (id == R.id.nav_setting) {
+            }
+
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
     }
 
     private void initViewPager() {
         mAdapter = new FragmentAdapter(getSupportFragmentManager());
-        mAdapter.addFragments(
-                getString(R.string.fragment_title_zhihu),
-                getString(R.string.fragment_title_gank));
         if (mViewPager != null) {
             mViewPager.setAdapter(mAdapter);
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
             tabLayout.setupWithViewPager(mViewPager);
         }
+        showReadFragments();
+    }
+
+    private void initBottomNavView() {
+        mBottomNavView.addTab(new BottomNavigationItem(
+                getString(R.string.nav_menu_read),
+                getResources().getColor(R.color.primary),
+                R.drawable.ic_nav_bottom_news)
+        );
+        mBottomNavView.addTab(new BottomNavigationItem(
+                getString(R.string.nav_menu_gallery),
+                getResources().getColor(R.color.primary),
+                R.drawable.ic_nav_bottom_pics)
+        );
+        mBottomNavView.setOnBottomNavigationItemClickListener((index) -> {
+            if (index == 0) {
+                showReadFragments();
+            } else if (index == 1) {
+                showGalleryFragments();
+            }
+        });
+        mBottomNavView.selectTab(0);
+    }
+
+    private void initArcLayout() {
+        mMenuLayout.setOnTouchListener((view, motionEvent) -> {
+                if (mMenuLayout.getVisibility() != View.INVISIBLE) {
+                    if (mFab.isSelected()) {
+                        ArcLayoutUtils.toggleArcLayout(mFab, mMenuLayout, mArcLayout);
+                    }
+                }
+                return false;
+            }
+        );
+    }
+
+    private void showReadFragments() {
+        mAdapter.addFragments(
+                getString(R.string.fragment_title_zhihu),
+                getString(R.string.fragment_title_gank),
+                getString(R.string.fragment_title_android));
+        mAdapter.notifyDataSetChanged();
+        mViewPager.setCurrentItem(0);
+    }
+
+    private void showGalleryFragments() {
+        mAdapter.addFragments(getResources().getStringArray(R.array.fragment_title_images));
+        mAdapter.notifyDataSetChanged();
+        mViewPager.setCurrentItem(0);
     }
 
     @OnClick(R.id.fab)
-    void initFab() {
-        Eventer.TopEvent.send();
+    void onFabClick() {
+        ArcLayoutUtils.toggleArcLayout(mFab, mMenuLayout, mArcLayout);
 //        Snackbar.make(mFab, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                .setAction("Action", view -> Toaster.quick("Action done")).show();
+    }
+
+    @OnClick(R.id.fab_up)
+    void onFabUpClick() {
+        EventUtils.TopEvent.send();
+        ArcLayoutUtils.toggleArcLayout(mFab, mMenuLayout, mArcLayout);
+    }
+
+    @OnClick(R.id.fab_search)
+    void onFabSearchClick() {
+        ArcLayoutUtils.toggleArcLayout(mFab, mMenuLayout, mArcLayout);
+    }
+
+    @OnClick(R.id.fab_favorite)
+    void onFabFavoriteClick() {
+        ArcLayoutUtils.toggleArcLayout(mFab, mMenuLayout, mArcLayout);
+    }
+
+    @OnClick(R.id.fab_setting)
+    void onFabSettingClick() {
+        ArcLayoutUtils.toggleArcLayout(mFab, mMenuLayout, mArcLayout);
     }
 
     @Override
@@ -110,7 +216,7 @@ public class HomeActivity extends AppCompatActivity
 //        getMenuInflater().inflate(R.menu.home, menu);
 //        return true;
 //    }
-//
+
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
 //        // Handle action bar item clicks here. The action bar will
@@ -125,30 +231,4 @@ public class HomeActivity extends AppCompatActivity
 //
 //        return super.onOptionsItemSelected(item);
 //    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_news) {
-            mAdapter.addFragments(
-                    getString(R.string.fragment_title_zhihu),
-                    getString(R.string.fragment_title_gank));
-            mAdapter.notifyDataSetChanged();
-            mViewPager.setCurrentItem(0);
-        } else if (id == R.id.nav_pics) {
-            mAdapter.addFragments(
-                    getString(R.string.fragment_title_fuli),
-                    getString(R.string.fragment_title_baidu));
-            mAdapter.notifyDataSetChanged();
-            mViewPager.setCurrentItem(0);
-        } else if (id == R.id.nav_share) {
-        } else if (id == R.id.nav_setting) {
-        }
-
-        mDrawerLayout.closeDrawer(GravityCompat.START);
-        return true;
-    }
 }

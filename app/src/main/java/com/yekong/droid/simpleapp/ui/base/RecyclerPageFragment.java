@@ -1,7 +1,9 @@
-package com.yekong.droid.simpleapp.ui;
+package com.yekong.droid.simpleapp.ui.base;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,7 +18,9 @@ import com.hannesdorfmann.mosby.mvp.viewstate.lce.data.RetainingLceViewState;
 import com.yekong.droid.simpleapp.R;
 import com.yekong.droid.simpleapp.mvp.presenter.BasePagePresenter;
 import com.yekong.droid.simpleapp.mvp.view.BaseView;
-import com.yekong.droid.simpleapp.util.Eventer;
+import com.yekong.droid.simpleapp.util.EventUtils;
+import com.yekong.droid.simpleapp.util.Logger;
+import com.yekong.droid.simpleapp.util.Toaster;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -40,7 +44,6 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<List<M>>, P ext
     RecyclerView mRecyclerView;
 
     protected List<M> mData;
-    protected BaseAdapter mAdapter;
     protected boolean mShowingDetail;
 
     private String mTitle;
@@ -83,12 +86,22 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<List<M>>, P ext
         mSwipeLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
             @Override
             public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
-                presenter.onRefreshData();
+                if (!presenter.onRefreshData()) {
+                    new Handler().postDelayed(() -> {
+                        mSwipeLayout.finishRefresh();
+                        Toaster.quick("Failed to refresh...");
+                    }, 500);
+                }
             }
 
             @Override
             public void onRefreshLoadMore(MaterialRefreshLayout materialRefreshLayout) {
-                presenter.onLoadMoreData();
+                if (!presenter.onLoadMoreData()) {
+                    new Handler().postDelayed(() -> {
+                        mSwipeLayout.finishRefreshLoadMore();
+                        Toaster.quick("No more to load...");
+                    }, 500);
+                }
             }
         });
     }
@@ -100,6 +113,7 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<List<M>>, P ext
 
     @Override
     public void loadData(boolean pullToRefresh) {
+        Logger.d("loadData(): pullToRefresh = %s", pullToRefresh);
         super.showLoading(pullToRefresh);
         super.presenter.onRefreshData();
     }
@@ -126,32 +140,50 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<List<M>>, P ext
         mSwipeLayout.finishRefreshLoadMore();
         this.showContent();
 
-        LinearLayoutManager llm = ((LinearLayoutManager) mRecyclerView.getLayoutManager());
-        final int firstPosition = llm.findFirstVisibleItemPosition();
-        View startView = mRecyclerView.getChildAt(0);
-        final int firstTop = (startView == null) ? 0 : (startView.getTop() - mRecyclerView.getPaddingTop());
+        int firstPosition = 0;
+        int firstTop = 0;
+        RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
+        if (layoutManager instanceof LinearLayoutManager) {
+            firstPosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+            View startView = mRecyclerView.getChildAt(0);
+            firstTop = (startView == null) ? 0 : (startView.getTop() - mRecyclerView.getPaddingTop());
+            ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(firstPosition, firstTop);
+        } else if (layoutManager instanceof GridLayoutManager) {
+            firstPosition = ((GridLayoutManager) layoutManager).findFirstVisibleItemPosition();
+            View startView = mRecyclerView.getChildAt(0);
+            firstTop = (startView == null) ? 0 : (startView.getTop() - mRecyclerView.getPaddingTop());
+            ((GridLayoutManager) layoutManager).scrollToPositionWithOffset(firstPosition, firstTop);
+        }
 
-        mAdapter = setupAdapter();
-        mRecyclerView.setAdapter(mAdapter);
+        layoutManager = setupLayoutManager();
+        RecyclerView.Adapter adapter = setupAdapter();
+        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setLayoutManager(layoutManager);
 
-        llm.scrollToPositionWithOffset(firstPosition, firstTop);
+        if (layoutManager instanceof LinearLayoutManager) {
+            ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(firstPosition, firstTop);
+        } else if (layoutManager instanceof GridLayoutManager) {
+            ((GridLayoutManager) layoutManager).scrollToPositionWithOffset(firstPosition, firstTop);
+        }
     }
 
     @Subscribe
-    public void onEventMainThread(Eventer.TopEvent event) {
-        LinearLayoutManager llm = ((LinearLayoutManager) mRecyclerView.getLayoutManager());
-        llm.scrollToPosition(0);
+    public void onEventMainThread(EventUtils.TopEvent event) {
+        mRecyclerView.getLayoutManager().scrollToPosition(0);
     }
 
     @Subscribe
-    public void onEventMainThread(Eventer.PositionEvent event) {
+    public void onEventMainThread(EventUtils.PositionEvent event) {
         if (!mShowingDetail) {
             return;
         }
-        LinearLayoutManager llm = ((LinearLayoutManager) mRecyclerView.getLayoutManager());
-        llm.scrollToPosition(event.pos);
+        mRecyclerView.getLayoutManager().scrollToPosition(event.pos);
         mShowingDetail = false;
     }
 
     protected abstract BaseAdapter setupAdapter();
+
+    protected RecyclerView.LayoutManager setupLayoutManager() {
+        return new LinearLayoutManager(getContext());
+    }
 }

@@ -11,36 +11,36 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.Dark.ActionBar">
 
+        <!-- app:layout_scrollFlags="scroll|enterAlways" -->
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.Light" />
+            app:popupTheme="@style/AppTheme.Light" >
 
-        <!--
-           app:tabMode
-               fixed
-                   - Display every single tab on the screen.
-                     Good for a small number of tabs but totally a bad choice if there are so many tabs.
-               scrollable
-                   - In the case you are not sure that all of them could be displayed nicely at a time.
-                     Let user scroll through tabs instead just like Google Play Store's.
-           app:tabGravity
-               fill
-                   - distribute all available space to each tab
-               center
-                   - place all of the tabs at the center of the screen,
-                     note that this attribute will be ignored if tabMode is set to scrollable.
-        -->
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.Dark.ActionBar"
-            app:tabMode="fixed" />
-
+            <!--
+               app:tabMode
+                   fixed
+                       - Display every single tab on the screen.
+                         Good for a small number of tabs but totally a bad choice if there are so many tabs.
+                   scrollable
+                       - In the case you are not sure that all of them could be displayed nicely at a time.
+                         Let user scroll through tabs instead just like Google Play Store's.
+               app:tabGravity
+                   fill
+                       - distribute all available space to each tab
+                   center
+                       - place all of the tabs at the center of the screen,
+                         note that this attribute will be ignored if tabMode is set to scrollable.
+            -->
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:theme="@style/AppTheme.Dark.ActionBar"
+                app:tabMode="scrollable" />
+        </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
@@ -48,6 +48,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <com.luseen.luseenbottomnavigation.BottomNavigation.BottomNavigationView
+        android:id="@+id/bottomNavView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:layout_behavior="@string/bye_burger_bottom_behavior"
+        app:bnv_colored_background="true"
+        app:bnv_with_text="true"
+        app:bnv_shadow="true"
+        app:bnv_tablet="false"
+        app:bnv_viewpager_slide="false"
+        app:bnv_active_color="@color/primary"
+        app:bnv_active_text_size="@dimen/bottom_navigation_text_size_active"
+        app:bnv_inactive_text_size="@dimen/bottom_navigation_text_size_inactive"/>
 
     <!--
         android:src
@@ -67,12 +82,57 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_menu_upload_you_tube"
+        android:layout_marginStart="@dimen/fab_margin_h"
+        android:layout_marginEnd="@dimen/fab_margin_h"
+        android:layout_marginBottom="@dimen/fab_margin_v"
+        android:src="@drawable/ic_add"
         app:backgroundTint="@color/primary"
         app:elevation="6dp"
         app:fabSize="normal"
         app:layout_behavior="@string/bye_burger_float_behavior"
         app:pressedTranslationZ="12dp" />
+
+    <FrameLayout
+        android:id="@+id/menu_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:visibility="invisible">
+
+        <com.ogaclejapan.arclayout.ArcLayout
+            android:id="@+id/arc_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/fab_margin_v"
+            app:arc_axisRadius="160dp"
+            app:arc_freeAngle="true"
+            app:arc_origin="bottom|end"
+            app:arc_radius="184dp">
+
+            <ImageButton
+                android:id="@+id/fab_setting"
+                style="@style/ArcItem"
+                android:src="@drawable/ic_fab_setting"
+                app:arc_angle="10" />
+
+            <ImageButton
+                android:id="@+id/fab_favorite"
+                style="@style/ArcItem"
+                android:src="@drawable/ic_fab_favorite"
+                app:arc_angle="33" />
+
+            <ImageButton
+                android:id="@+id/fab_search"
+                style="@style/ArcItem"
+                android:src="@drawable/ic_fab_search"
+                app:arc_angle="56" />
+
+            <ImageButton
+                android:id="@+id/fab_up"
+                style="@style/ArcItem"
+                android:src="@drawable/ic_fab_up"
+                app:arc_angle="79" />
+        </com.ogaclejapan.arclayout.ArcLayout>
+    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,25 +1,28 @@
 package com.yekong.droid.simpleapp.ui;
 
 import android.annotation.SuppressLint;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.util.Pair;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
+import com.arasthel.asyncjob.AsyncJob;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.github.piasy.biv.view.BigImageView;
-import com.github.piasy.biv.view.ImageSaveCallback;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 import com.yekong.droid.simpleapp.R;
-import com.yekong.droid.simpleapp.util.Eventer;
+import com.yekong.droid.simpleapp.util.EventUtils;
 import com.yekong.droid.simpleapp.util.Toaster;
+import com.yekong.droid.simpleapp.util.UiUtils;
+import com.yekong.droid.simpleapp.util.WebUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +32,7 @@ import butterknife.OnClick;
 
 public class ImageActivity extends AppCompatActivity {
     public static final String ACTION = "com.yekong.droid.simpleapp.action.VIEW_IMAGE";
-    public static final String EXTRA_TITLES = "EXTRA_TITLES";
+    public static final String EXTRA_TITLE = "EXTRA_TITLE";
     public static final String EXTRA_URLS = "EXTRA_URLS";
     public static final String EXTRA_POS = "EXTRA_POS";
 
@@ -56,33 +59,13 @@ public class ImageActivity extends AppCompatActivity {
     @BindView(R.id.bottom_controls)
     View mControlsBottomView;
 
-    private void setFullScreen() {
-        // Note that some of these constants are new as of API 16 (Jelly Bean)
-        // and API 19 (KitKat). It is safe to use them, as they are inlined
-        // at compile-time and do nothing on earlier devices.
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-    }
-
-    private void setFullscreenWithActionBar() {
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-    }
-
     private final Runnable mEnterFullscreenRunnable = () -> {
         // Delayed removal of status and navigation bar
-        setFullScreen();
+        UiUtils.enterFullScreen(getWindow().getDecorView());
     };
 
     private final Runnable mExitFullscreenRunnable = () -> {
-        setFullscreenWithActionBar();
+        UiUtils.enterFullscreenWithActionBar(getWindow().getDecorView());
         // Delayed display of UI elements
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -114,11 +97,11 @@ public class ImageActivity extends AppCompatActivity {
     private void setupContentView() {
         mVisible = true;
 
-        final ArrayList<String> titles = getIntent().getStringArrayListExtra(EXTRA_TITLES);
+        final String title = getIntent().getStringExtra(EXTRA_TITLE);
         final ArrayList<String> urls = getIntent().getStringArrayListExtra(EXTRA_URLS);
         final int pos = getIntent().getIntExtra(EXTRA_POS, 0);
 
-        getSupportActionBar().setTitle(titles.get(pos));
+        getSupportActionBar().setTitle(title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         LinearLayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -128,9 +111,6 @@ public class ImageActivity extends AppCompatActivity {
         adapter.openLoadAnimation();
         mRecyclerViewPager.setAdapter(adapter);
         mRecyclerViewPager.scrollToPosition(pos);
-        mRecyclerViewPager.addOnPageChangedListener((currPos, newPos) -> {
-            getSupportActionBar().setTitle(titles.get(newPos));
-        });
 
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
@@ -140,9 +120,8 @@ public class ImageActivity extends AppCompatActivity {
 
     @OnClick(R.id.saveImageButton)
     public void onClick(View view) {
-        BigImageView bigImageView = (BigImageView) mRecyclerViewPager.getChildAt(
-                mRecyclerViewPager.getCurrentPosition()).findViewById(R.id.bigImageView);
-        bigImageView.saveImageIntoGallery();
+        ImageView imageView = (ImageView) mRecyclerViewPager.getChildAt(
+                mRecyclerViewPager.getCurrentPosition()).findViewById(R.id.imageView);
     }
 
     @Override
@@ -201,35 +180,35 @@ public class ImageActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Eventer.PositionEvent.send(mRecyclerViewPager.getCurrentPosition());
+        EventUtils.PositionEvent.send(mRecyclerViewPager.getCurrentPosition());
     }
 
     class ImageAdapter extends BaseQuickAdapter<String> {
 
         public ImageAdapter(List<String> data) {
-            super(R.layout.item_image, data);
+            super(R.layout.item_big_image, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder baseViewHolder, String s) {
-            BigImageView bigImageView = baseViewHolder.getView(R.id.bigImageView);
-            bigImageView.showImage(Uri.parse(s));
+        protected void convert(BaseViewHolder baseViewHolder, String url) {
+            ImageView imageView = baseViewHolder.getView(R.id.imageView);
+            UiUtils.loadImageNow(imageView, url);
             // Set up the user interaction to manually show or hide the system UI.
-            bigImageView.setOnClickListener(view -> toggle());
-            bigImageView.setOnLongClickListener((view) -> {
-                bigImageView.saveImageIntoGallery();
+            imageView.setOnClickListener(view -> toggle());
+            imageView.setOnLongClickListener((view) -> {
+                AsyncJob.doInBackground(() -> {
+                    Pair<File, Boolean> result = WebUtils.downloadGlideImage(url);
+                    AsyncJob.doOnMainThread(() -> {
+                        if (result == null) {
+                            Toaster.quick("Save failed!");
+                        } else if (result.second) {
+                            Toaster.quick("Saved already!");
+                        } else {
+                            Toaster.quick("Saved to %s", result.first.getAbsolutePath());
+                        }
+                    });
+                });
                 return true;
-            });
-            bigImageView.setImageSaveCallback(new ImageSaveCallback() {
-                @Override
-                public void onSuccess(String uri) {
-                    Toaster.quick("Save done!");
-                }
-
-                @Override
-                public void onFail(Throwable t) {
-                    Toaster.quick("Save failed!");
-                }
             });
         }
     }

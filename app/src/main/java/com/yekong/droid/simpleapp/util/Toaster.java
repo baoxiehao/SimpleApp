@@ -13,7 +13,15 @@ public class Toaster {
         Toast.makeText(SimpleApp.getAppComponent().getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
+    public static void quick(String message, Object... args) {
+        Toast.makeText(SimpleApp.getAppComponent().getContext(), String.format(message, args), Toast.LENGTH_SHORT).show();
+    }
+
     public static void slow(String message) {
         Toast.makeText(SimpleApp.getAppComponent().getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    public static void slow(String message, Object... args) {
+        Toast.makeText(SimpleApp.getAppComponent().getContext(), String.format(message, args), Toast.LENGTH_LONG).show();
     }
 }

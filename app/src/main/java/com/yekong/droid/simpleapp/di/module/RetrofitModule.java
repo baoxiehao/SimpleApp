@@ -4,7 +4,6 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.yekong.droid.simpleapp.di.Baidu;
 import com.yekong.droid.simpleapp.di.Gank;
 import com.yekong.droid.simpleapp.di.Github;
 import com.yekong.droid.simpleapp.di.ZhiHu;
@@ -31,13 +30,6 @@ public class RetrofitModule {
     @Github
     public Retrofit provideGithubRetrofit(@Github Retrofit.Builder builder) {
         return builder.baseUrl("https://api.github.com/").build();
-    }
-
-    @Provides
-    @Singleton
-    @Baidu
-    public Retrofit provideBaiduRetrofit(@Baidu Retrofit.Builder builder) {
-        return builder.baseUrl("http://image.baidu.com/").build();
     }
 
     @Provides
@@ -77,24 +69,8 @@ public class RetrofitModule {
 
     @Provides
     @Singleton
-    @Baidu
-    public Retrofit.Builder provideBaiduImageRetrofitBuilder(@Baidu Converter.Factory converterFactory) {
-        return new Retrofit.Builder()
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
-                .addConverterFactory(converterFactory);
-    }
-
-    @Provides
-    @Singleton
     @Github
     public Converter.Factory provideGithubConverterFactory(@Github Gson gson) {
-        return GsonConverterFactory.create(gson);
-    }
-
-    @Provides
-    @Singleton
-    @Baidu
-    public Converter.Factory provideBaiduImageConverterFactory(@Baidu Gson gson) {
         return GsonConverterFactory.create(gson);
     }
 
@@ -107,17 +83,6 @@ public class RetrofitModule {
                 .setFieldNamingStrategy(new CustomFieldNamingPolicy())
                 .setPrettyPrinting()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-                .serializeNulls()
-                .create();
-    }
-
-    @Provides
-    @Singleton
-    @Baidu
-    Gson provideBaiduImageGson() {
-        return new GsonBuilder()
-                .setPrettyPrinting()
-                .setDateFormat("yyyy-MM-dd")
                 .serializeNulls()
                 .create();
     }

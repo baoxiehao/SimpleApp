@@ -23,28 +23,37 @@ public interface GankContract {
 
         class Presenter extends BasePagePresenter<GankContract.Article.View, Gank.Article> {
 
-            void getAndroid() {
-                SimpleApp.getAppComponent().getGankService().getArticle("Android", GankApi.PAGE_SIZE, mPage)
+            int mPage = 1;
+
+            void getAndroid(int page) {
+                final String pageKey = getPageKey(page);
+
+                SimpleApp.getAppComponent().getGankService().getArticle("Android", GankApi.PAGE_SIZE, page)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .map(response -> response.results)
-                        .subscribe(entities -> {
-                            onPageData(super.getPageKey(mPage), entities);
-                        }, error -> {
-                            onPageError(error);
-                        });
+                        .subscribe(entities -> onPageData(pageKey, entities),
+                                error -> onPageError(error));
             }
 
             @Override
-            public void onRefreshData() {
+            public boolean onRefreshData() {
                 super.onRefreshData();
-                getAndroid();
+
+                mPage = 1;
+                updatePageKey(getPageKey(mPage));
+                getAndroid(mPage);
+                return true;
             }
 
             @Override
-            public void onLoadMoreData() {
+            public boolean onLoadMoreData() {
                 super.onLoadMoreData();
-                getAndroid();
+
+                mPage += 1;
+                updatePageKey(getPageKey(mPage));
+                getAndroid(mPage);
+                return true;
             }
         }
     }
@@ -55,28 +64,37 @@ public interface GankContract {
 
         class Presenter extends BasePagePresenter<GankContract.Fuli.View, Gank.Fuli> {
 
-            void getFuli() {
-                SimpleApp.getAppComponent().getGankService().getFuli(GankApi.PAGE_SIZE, mPage)
+            int mPage = 1;
+
+            void getFuli(int page) {
+                final String pageKey = getPageKey(page);
+
+                SimpleApp.getAppComponent().getGankService().getFuli(GankApi.PAGE_SIZE, page)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .map(response -> response.results)
-                        .subscribe(entities -> {
-                            onPageData(super.getPageKey(mPage), entities);
-                        }, error -> {
-                            onPageError(error);
-                        });
+                        .subscribe(entities -> onPageData(pageKey, entities),
+                                error -> onPageError(error));
             }
 
             @Override
-            public void onRefreshData() {
+            public boolean onRefreshData() {
                 super.onRefreshData();
-                getFuli();
+
+                mPage = 1;
+                updatePageKey(getPageKey(mPage));
+                getFuli(mPage);
+                return true;
             }
 
             @Override
-            public void onLoadMoreData() {
+            public boolean onLoadMoreData() {
                 super.onLoadMoreData();
-                getFuli();
+
+                mPage += 1;
+                updatePageKey(getPageKey(mPage));
+                getFuli(mPage);
+                return true;
             }
         }
     }

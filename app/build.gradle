@@ -73,7 +73,6 @@ dependencies {
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
-    compile 'com.github.piasy:BigImageViewer:1.2.2'
     compile 'com.github.piasy:GlideImageLoader:1.2.2'
 
     compile "io.reactivex:rxjava:$rx"
@@ -82,6 +81,22 @@ dependencies {
     compile 'com.thefinestartist:finestwebview:1.2.7'
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v1.9.7'
     compile 'com.github.lsjwzh.RecyclerViewPager:lib:v1.1.2'
+
+    compile 'com.ogaclejapan.arclayout:library:1.1.0@aar'
+
+    compile 'com.github.armcha:LuseenBottomNavigation:1.8.2'
+
+    // Jsoup HTML parser library @ http://jsoup.org/
+    compile 'org.jsoup:jsoup:1.10.2'
+
+    // Qiniu Java SDK
+    compile 'com.qiniu:qiniu-java-sdk:7.2.+'
+
+    // FragmentArgs
+    compile 'com.hannesdorfmann.fragmentargs:annotation:3.0.2'
+    apt 'com.hannesdorfmann.fragmentargs:processor:3.0.2'
+
+    compile 'com.arasthel:asyncjob-library:1.0.3'
 
     testCompile 'junit:junit:4.12'
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife"

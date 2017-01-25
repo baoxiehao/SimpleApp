@@ -14,9 +14,7 @@ import java.util.List;
 
 public abstract class BasePagePresenter<V extends BaseView, M> extends BasePresenter<V> {
 
-    protected List<M> mData = new ArrayList<>();
-
-    protected int mPage = 1;
+    private List<M> mData = new ArrayList<>();
 
     protected List<String> mPages = new ArrayList<>();
 
@@ -32,56 +30,48 @@ public abstract class BasePagePresenter<V extends BaseView, M> extends BasePrese
      */
     protected String getPageKey(Object... args) {
         if (args == null || args.length == 0) {
-            throw new IllegalArgumentException("No args, should be overridden");
+            throw new IllegalArgumentException("No page key arguments!");
         } else {
             StringBuilder sb = new StringBuilder();
             for (Object arg : args) {
-                sb.append(arg.toString());
+                sb.append(arg != null ? arg.toString() : "null");
             }
             return sb.toString();
         }
     }
 
-    public void onRefreshData() {
-        Logger.d("onRefreshData(): tag=%s", tag());
-        if (isNumericPage()) {
-            mPage = 1;
+    protected void updatePageKey(String page) {
+        updatePageKey(page, true);
+    }
+
+    protected void updatePageKey(String page, boolean appendIfMissing) {
+        final int index = mPages.indexOf(page);
+        mPages.remove(page);
+        if (index < 0) {
+            if (appendIfMissing) {
+                mPages.add(page);
+            } else {
+                mPages.add(0, page);
+            }
         } else {
-            mPages.clear();
-            mPages.add(getPageKey());
+            mPages.add(index, page);
         }
     }
 
-    public void onLoadMoreData() {
+    public boolean onRefreshData() {
+        Logger.d("onRefreshData(): tag=%s", tag());
+        return false;
+    }
+
+    public boolean onLoadMoreData() {
         Logger.d("onLoadMoreData(): tag=%s", tag());
-        if (isNumericPage()) {
-            mPage += 1;
-        } else {
-            mPages.add(getPageKey());
-        }
+        return false;
     }
 
     protected void onPageData(String page, List<M> data) {
         Logger.d("onPageData(): tag=%s, numericPage=%s, page=%s, count=%s", tag(), isNumericPage(), page, data.size());
         mPageDataMap.put(page, data);
-        mData.clear();
-        if (isNumericPage()) {
-            for (int i = 1; i <= mPage; i++) {
-                List<M> pageData = mPageDataMap.get(getPageKey(i));
-                Logger.d("onPageData(): tag=%s, page=%s, count=%s", tag(), i, pageData != null ? pageData.size() : 0);
-                if (pageData != null) {
-                    mData.addAll(pageData);
-                }
-            }
-        } else {
-            for (String p : mPages) {
-                List<M> pageData = mPageDataMap.get(p);
-                Logger.d("onPageData(): tag=%s, page=%s, count=%s", tag(), p, pageData != null ? pageData.size() : 0);
-                if (pageData != null) {
-                    mData.addAll(pageData);
-                }
-            }
-        }
+        updateData();
         showDataOrError(new Exception("No Data"));
     }
 
@@ -89,6 +79,17 @@ public abstract class BasePagePresenter<V extends BaseView, M> extends BasePrese
         Logger.e(String.format("onPageError(): tag=%s", tag()), throwable);
         Toaster.quick(throwable.toString());
         showDataOrError(throwable);
+    }
+
+    private void updateData() {
+        mData.clear();
+        for (String p : mPages) {
+            List<M> pageData = mPageDataMap.get(p);
+            Logger.d("onPageData(): tag=%s, page=%s, count=%s", tag(), p, pageData != null ? pageData.size() : 0);
+            if (pageData != null) {
+                mData.addAll(pageData);
+            }
+        }
     }
 
     private void showDataOrError(Throwable throwable) {
@@ -105,5 +106,5 @@ public abstract class BasePagePresenter<V extends BaseView, M> extends BasePrese
     private String tag() {
         String tag = getClass().toString();
         return tag.substring(tag.lastIndexOf(".") + 1);
-   }
+    }
 }

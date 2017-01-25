@@ -5,13 +5,14 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="action_search">Search</string>
 
     <!-- Navigation -->
     <string name="nav_author">Elixon</string>
     <string name="nav_author_desc">https://baoxiehao.github.com</string>
 
-    <string name="nav_menu_news">News</string>
-    <string name="nav_menu_pics">Pics</string>
+    <string name="nav_menu_read">Read</string>
+    <string name="nav_menu_gallery">Gallery</string>
     <string name="nav_menu_share">Share</string>
     <string name="nav_menu_setting">Setting</string>
 
@@ -20,8 +21,16 @@
 
     <string name="fragment_title_zhihu">ZhiHu</string>
     <string name="fragment_title_gank">Gank</string>
+    <string name="fragment_title_android">Android</string>
     <string name="fragment_title_fuli">Fuli</string>
-    <string name="fragment_title_baidu">Baidu</string>
+    <string-array name="fragment_title_images">
+        <item>Fuli</item>
+        <item>Lofter</item>
+        <item>Mina</item>
+        <item>微博</item>
+        <item>健身</item>
+        <item>气质</item>
+    </string-array>
 
     <string name="error_require_email">Error, email is required</string>
     <string name="error_require_password">Error, password is required</string>

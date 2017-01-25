@@ -6,6 +6,8 @@ import com.yekong.droid.simpleapp.app.SimpleApp;
 import com.yekong.droid.simpleapp.model.ZhiHu;
 import com.yekong.droid.simpleapp.mvp.common.UserCase;
 import com.yekong.droid.simpleapp.mvp.contract.ZhiHuContract;
+import com.yekong.droid.simpleapp.ui.base.BaseAdapter;
+import com.yekong.droid.simpleapp.ui.base.RecyclerPageFragment;
 import com.yekong.droid.simpleapp.util.DateUtils;
 import com.yekong.droid.simpleapp.util.Toaster;
 import com.yekong.droid.simpleapp.util.UiUtils;

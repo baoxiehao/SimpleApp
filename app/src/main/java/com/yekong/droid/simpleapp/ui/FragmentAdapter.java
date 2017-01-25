@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import com.yekong.droid.simpleapp.R;
 import com.yekong.droid.simpleapp.app.SimpleApp;
+import com.yekong.droid.simpleapp.ui.base.RecyclerPageFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,20 +35,17 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         final Context context = SimpleApp.getAppComponent().getContext();
         String title = getPageTitle(position).toString();
+        RecyclerPageFragment fragment = null;
         if (TextUtils.equals(context.getString(R.string.fragment_title_zhihu), title)) {
-            RecyclerPageFragment fragment = new ZhiHuFragment();
-            fragment.setTitle(title);
-            return fragment;
+            fragment = new ZhiHuFragment();
         } else if (TextUtils.equals(context.getString(R.string.fragment_title_gank), title)) {
-            RecyclerPageFragment fragment = new GankArticleFragment();
-            fragment.setTitle(title);
-            return fragment;
-        } else if (TextUtils.equals(context.getString(R.string.fragment_title_fuli), title)) {
-            RecyclerPageFragment fragment = new GankFuliFragment();
-            fragment.setTitle(title);
-            return fragment;
-        } else if (TextUtils.equals(context.getString(R.string.fragment_title_baidu), title)) {
-            RecyclerPageFragment fragment = new BaiduImageFragment();
+            fragment = new GankFragment();
+        } else if (TextUtils.equals(context.getString(R.string.fragment_title_android), title)) {
+            fragment = new RssFragment();
+        } else {
+            fragment = new ImageFragmentBuilder(title).build();
+        }
+        if (fragment != null) {
             fragment.setTitle(title);
             return fragment;
         }

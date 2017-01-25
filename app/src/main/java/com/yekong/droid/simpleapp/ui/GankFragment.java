@@ -5,6 +5,8 @@ import com.yekong.droid.simpleapp.R;
 import com.yekong.droid.simpleapp.model.Gank;
 import com.yekong.droid.simpleapp.mvp.common.UserCase;
 import com.yekong.droid.simpleapp.mvp.contract.GankContract;
+import com.yekong.droid.simpleapp.ui.base.BaseAdapter;
+import com.yekong.droid.simpleapp.ui.base.RecyclerPageFragment;
 import com.yekong.droid.simpleapp.util.DateUtils;
 
 import java.util.List;
@@ -13,7 +15,7 @@ import java.util.List;
  * Created by baoxiehao on 16/11/28.
  */
 
-public class GankArticleFragment extends RecyclerPageFragment<
+public class GankFragment extends RecyclerPageFragment<
         Gank.Article, GankContract.Article.View, GankContract.Article.Presenter>
         implements GankContract.Article.View {
 

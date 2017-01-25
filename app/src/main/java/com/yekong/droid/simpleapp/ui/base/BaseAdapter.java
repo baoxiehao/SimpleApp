@@ -1,4 +1,4 @@
-package com.yekong.droid.simpleapp.ui;
+package com.yekong.droid.simpleapp.ui.base;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 

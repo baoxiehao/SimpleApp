@@ -29,6 +29,8 @@ public interface ZhiHuContract {
             private int mDay;
 
             void getNewsAt(int year, int month, int day) {
+                final String pageKey = getPageKey(year, month, day);
+
                 Calendar c = Calendar.getInstance();
                 int nowYear = c.get(Calendar.YEAR);
                 int nowMonth = c.get(Calendar.MONTH);
@@ -47,49 +49,41 @@ public interface ZhiHuContract {
                             }
                             return stories;
                         })
-                        .subscribe(stories -> {
-                            onPageData(getPageKey(), stories);
-                        }, error -> {
-                            onPageError(error);
-                        });
+                        .subscribe(stories -> onPageData(pageKey, stories),
+                                error -> onPageError(error));
             }
 
             @Override
-            protected boolean isNumericPage() {
-                return false;
-            }
+            public boolean onRefreshData() {
+                super.onRefreshData();
 
-            @Override
-            protected String getPageKey(Object... args) {
-                return super.getPageKey(mYear, mMonth, mDay);
-            }
-
-            @Override
-            public void onRefreshData() {
                 Calendar c = Calendar.getInstance();
                 mYear = c.get(Calendar.YEAR);
                 mMonth = c.get(Calendar.MONTH) + 1;
                 mDay = c.get(Calendar.DAY_OF_MONTH);
 
-                super.onRefreshData();
-
+                super.updatePageKey(getPageKey(mYear, mMonth, mDay), false);
                 getNewsAt(mYear, mMonth, mDay);
+                return true;
             }
 
             @Override
-            public void onLoadMoreData() {
+            public boolean onLoadMoreData() {
+                super.onLoadMoreData();
+
                 Calendar c = Calendar.getInstance();
                 c.set(Calendar.YEAR, mYear);
                 c.set(Calendar.MONTH, mMonth - 1);
                 c.set(Calendar.DAY_OF_MONTH, mDay);
                 c.add(Calendar.DAY_OF_MONTH, -1);
+
                 mYear = c.get(Calendar.YEAR);
                 mMonth = c.get(Calendar.MONTH) + 1;
                 mDay = c.get(Calendar.DAY_OF_MONTH);
 
-                super.onLoadMoreData();
-
+                super.updatePageKey(getPageKey(mYear, mMonth, mDay));
                 getNewsAt(mYear, mMonth, mDay);
+                return true;
             }
         }
     }

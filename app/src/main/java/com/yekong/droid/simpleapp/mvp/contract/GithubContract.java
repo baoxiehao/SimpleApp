@@ -22,8 +22,10 @@ public interface GithubContract {
 
     class Presenter extends BasePagePresenter<View, GithubRepo> {
 
+        int mPage = 1;
+
         @Override
-        public void onRefreshData() {
+        public boolean onRefreshData() {
             SimpleApp.getAppComponent().getGithubService().getUserRepos("baoxiehao", mPage, GithubApi.REPO_PAGE_SIZE)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -32,6 +34,7 @@ public interface GithubContract {
                     }, error -> {
                         onPageError(error);
                     });
+            return true;
         }
     }
 }

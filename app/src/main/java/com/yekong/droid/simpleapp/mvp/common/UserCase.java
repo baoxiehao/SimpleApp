@@ -15,10 +15,10 @@ import java.util.ArrayList;
 
 public class UserCase {
 
-    public static void showImages(ArrayList<String> titles, ArrayList<String> urls, int position) {
+    public static void showImages(String title, ArrayList<String> urls, int position) {
         Intent intent = new Intent(ImageActivity.ACTION);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putStringArrayListExtra(ImageActivity.EXTRA_TITLES, titles);
+        intent.putExtra(ImageActivity.EXTRA_TITLE, title);
         intent.putStringArrayListExtra(ImageActivity.EXTRA_URLS, urls);
         intent.putExtra(ImageActivity.EXTRA_POS, position);
         SimpleApp.getAppComponent().getContext().startActivity(intent);

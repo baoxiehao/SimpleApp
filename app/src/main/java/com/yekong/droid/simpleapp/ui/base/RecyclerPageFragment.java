@@ -10,11 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.cjj.MaterialRefreshLayout;
-import com.cjj.MaterialRefreshListener;
 import com.hannesdorfmann.mosby.mvp.viewstate.lce.LceViewState;
 import com.hannesdorfmann.mosby.mvp.viewstate.lce.MvpLceViewStateFragment;
 import com.hannesdorfmann.mosby.mvp.viewstate.lce.data.RetainingLceViewState;
+import com.lcodecore.tkrefreshlayout.Footer.BottomProgressView;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.header.progresslayout.ProgressLayout;
 import com.yekong.droid.simpleapp.R;
 import com.yekong.droid.simpleapp.mvp.presenter.BasePagePresenter;
 import com.yekong.droid.simpleapp.mvp.view.BaseView;
@@ -35,10 +37,10 @@ import butterknife.ButterKnife;
  */
 
 public abstract class RecyclerPageFragment<M, V extends BaseView<List<M>>, P extends BasePagePresenter<V, M>>
-        extends MvpLceViewStateFragment<MaterialRefreshLayout, List<M>, V, P> {
+        extends MvpLceViewStateFragment<TwinklingRefreshLayout, List<M>, V, P> {
 
     @BindView(R.id.contentView)
-    MaterialRefreshLayout mSwipeLayout;
+    TwinklingRefreshLayout mSwipeLayout;
 
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
@@ -83,22 +85,36 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<List<M>>, P ext
     }
 
     private void initViews() {
-        mSwipeLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
+        mSwipeLayout.setAutoLoadMore(true);
+
+        final ProgressLayout headerView = new ProgressLayout(getActivity());
+        headerView.setProgressBackgroundColorSchemeResource(android.R.color.white);
+        headerView.setColorSchemeResources(R.color.primary);
+        mSwipeLayout.setHeaderView(headerView);
+        mSwipeLayout.setHeaderHeight(64);
+
+        final BottomProgressView bottomView = new BottomProgressView(getActivity());
+        bottomView.setNormalColor(getResources().getColor(R.color.primary));
+        bottomView.setAnimatingColor(getResources().getColor(R.color.primary));
+        mSwipeLayout.setBottomView(bottomView);
+        mSwipeLayout.setBottomHeight(48);
+
+        mSwipeLayout.setOnRefreshListener(new RefreshListenerAdapter() {
             @Override
-            public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
+            public void onRefresh(final TwinklingRefreshLayout refreshLayout) {
                 if (!presenter.onRefreshData()) {
                     new Handler().postDelayed(() -> {
-                        mSwipeLayout.finishRefresh();
+                        mSwipeLayout.finishRefreshing();
                         Toaster.quick("Failed to refresh...");
                     }, 500);
                 }
             }
 
             @Override
-            public void onRefreshLoadMore(MaterialRefreshLayout materialRefreshLayout) {
+            public void onLoadMore(final TwinklingRefreshLayout refreshLayout) {
                 if (!presenter.onLoadMoreData()) {
                     new Handler().postDelayed(() -> {
-                        mSwipeLayout.finishRefreshLoadMore();
+                        mSwipeLayout.finishLoadmore();
                         Toaster.quick("No more to load...");
                     }, 500);
                 }
@@ -136,8 +152,8 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<List<M>>, P ext
     @Override
     public void setData(List<M> data) {
         mData = data;
-        mSwipeLayout.finishRefresh();
-        mSwipeLayout.finishRefreshLoadMore();
+        mSwipeLayout.finishRefreshing();
+        mSwipeLayout.finishLoadmore();
         this.showContent();
 
         int firstPosition = 0;

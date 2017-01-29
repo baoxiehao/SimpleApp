@@ -28,7 +28,7 @@
             android:name=".ui.ImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_image"
-            android:theme="@style/FullscreenTheme">
+            android:theme="@style/AppTheme.Fullscreen">
             <intent-filter>
                 <action android:name="com.yekong.droid.simpleapp.action.VIEW_IMAGE" />
                 <category android:name="android.intent.category.DEFAULT" />

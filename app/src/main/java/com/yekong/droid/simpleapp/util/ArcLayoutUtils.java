@@ -24,6 +24,7 @@ public class ArcLayoutUtils {
     }
 
     public static void toggleArcLayout(final View fab, final View menuLayout, final ArcLayout arcLayout) {
+        // TODO: fix the click lister when fab is invisible
         if (!fab.isSelected()) {
             showArcLayout(fab, menuLayout, arcLayout);
         } else {

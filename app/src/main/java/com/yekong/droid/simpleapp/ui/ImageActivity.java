@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.arasthel.asyncjob.AsyncJob;
+import com.bumptech.glide.Priority;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
@@ -49,6 +50,10 @@ public class ImageActivity extends AppCompatActivity {
     private final Handler mHideHandler = new Handler();
 
     private boolean mVisible;
+
+    private String mTitle;
+    private ArrayList<String> mUrls;
+    private int mPos;
 
     @BindView(R.id.recyclerViewPager)
     RecyclerViewPager mRecyclerViewPager;
@@ -97,20 +102,23 @@ public class ImageActivity extends AppCompatActivity {
     private void setupContentView() {
         mVisible = true;
 
-        final String title = getIntent().getStringExtra(EXTRA_TITLE);
-        final ArrayList<String> urls = getIntent().getStringArrayListExtra(EXTRA_URLS);
-        final int pos = getIntent().getIntExtra(EXTRA_POS, 0);
+        mTitle = getIntent().getStringExtra(EXTRA_TITLE);
+        mUrls = getIntent().getStringArrayListExtra(EXTRA_URLS);
+        mPos = getIntent().getIntExtra(EXTRA_POS, 0);
 
-        getSupportActionBar().setTitle(title);
+        getSupportActionBar().setTitle(mTitle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         LinearLayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerViewPager.setLayoutManager(layout);
 
-        BaseQuickAdapter adapter = new ImageAdapter(urls);
+        BaseQuickAdapter adapter = new ImageAdapter(mUrls);
         adapter.openLoadAnimation();
         mRecyclerViewPager.setAdapter(adapter);
-        mRecyclerViewPager.scrollToPosition(pos);
+        mRecyclerViewPager.addOnPageChangedListener((fromPos, toPos) -> {
+            mPos = toPos;
+        });
+        mRecyclerViewPager.scrollToPosition(mPos);
 
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
@@ -120,8 +128,7 @@ public class ImageActivity extends AppCompatActivity {
 
     @OnClick(R.id.saveImageButton)
     public void onClick(View view) {
-        ImageView imageView = (ImageView) mRecyclerViewPager.getChildAt(
-                mRecyclerViewPager.getCurrentPosition()).findViewById(R.id.imageView);
+        downloadImage(mUrls.get(mRecyclerViewPager.getCurrentPosition()));
     }
 
     @Override
@@ -166,8 +173,7 @@ public class ImageActivity extends AppCompatActivity {
     @SuppressLint("InlinedApi")
     private void show() {
         // Show the system bar
-        mRecyclerViewPager.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+        mRecyclerViewPager.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         mVisible = true;
 
         // Schedule a runnable to display UI elements after a delay
@@ -192,24 +198,28 @@ public class ImageActivity extends AppCompatActivity {
         @Override
         protected void convert(BaseViewHolder baseViewHolder, String url) {
             ImageView imageView = baseViewHolder.getView(R.id.imageView);
-            UiUtils.loadImageNow(imageView, url);
+            UiUtils.loadImage(imageView, url, mPos == mUrls.indexOf(url) ? Priority.IMMEDIATE : Priority.NORMAL);
             // Set up the user interaction to manually show or hide the system UI.
             imageView.setOnClickListener(view -> toggle());
             imageView.setOnLongClickListener((view) -> {
-                AsyncJob.doInBackground(() -> {
-                    Pair<File, Boolean> result = WebUtils.downloadGlideImage(url);
-                    AsyncJob.doOnMainThread(() -> {
-                        if (result == null) {
-                            Toaster.quick("Save failed!");
-                        } else if (result.second) {
-                            Toaster.quick("Saved already!");
-                        } else {
-                            Toaster.quick("Saved to %s", result.first.getAbsolutePath());
-                        }
-                    });
-                });
+                downloadImage(url);
                 return true;
             });
         }
+    }
+
+    private void downloadImage(final String url) {
+        AsyncJob.doInBackground(() -> {
+            Pair<File, Boolean> result = WebUtils.downloadGlideImage(url);
+            AsyncJob.doOnMainThread(() -> {
+                if (result == null) {
+                    Toaster.quick("Save failed!");
+                } else if (result.second) {
+                    Toaster.quick("Saved already!");
+                } else {
+                    Toaster.quick("Saved to %s", result.first.getAbsolutePath());
+                }
+            });
+        });
     }
 }

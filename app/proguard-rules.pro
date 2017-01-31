@@ -32,3 +32,6 @@
 -keep class com.qiniu.**{public <init>();}
 -ignorewarnings
 
+# paper db
+-keep class * implements java.io.Serializable { *; }
+-keep class io.paperdb.** { *; }

@@ -11,8 +11,8 @@
     <string name="nav_author">Elixon</string>
     <string name="nav_author_desc">https://baoxiehao.github.com</string>
 
-    <string name="nav_menu_read">Read</string>
-    <string name="nav_menu_gallery">Gallery</string>
+    <string name="nav_menu_read">READ</string>
+    <string name="nav_menu_gallery">GALLERY</string>
     <string name="nav_menu_share">Share</string>
     <string name="nav_menu_setting">Setting</string>
 
@@ -20,13 +20,16 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="fragment_title_zhihu">ZhiHu</string>
+    <string name="fragment_title_tech">Tech</string>
+    <string name="fragment_title_blog">Blog</string>
     <string name="fragment_title_gank">Gank</string>
     <string name="fragment_title_android">Android</string>
+
     <string name="fragment_title_fuli">Fuli</string>
     <string-array name="fragment_title_images">
         <item>Fuli</item>
         <item>Lofter</item>
-        <item>Mina</item>
+        <item>咪娜</item>
         <item>微博</item>
         <item>健身</item>
         <item>气质</item>

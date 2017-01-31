@@ -4,6 +4,8 @@ import com.yekong.droid.simpleapp.mvp.view.BaseView;
 import com.yekong.droid.simpleapp.util.Logger;
 import com.yekong.droid.simpleapp.util.Toaster;
 
+import org.jsoup.HttpStatusException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +79,6 @@ public abstract class BasePagePresenter<V extends BaseView, M> extends BasePrese
 
     protected void onPageError(Throwable throwable) {
         Logger.e(String.format("onPageError(): tag=%s", tag()), throwable);
-        Toaster.quick(throwable.toString());
         showDataOrError(throwable);
     }
 
@@ -98,7 +99,12 @@ public abstract class BasePagePresenter<V extends BaseView, M> extends BasePrese
             if (!mData.isEmpty()) {
                 view.setData(mData);
             } else {
-                view.showError(throwable, false);
+                if (throwable instanceof HttpStatusException) {
+                    onLoadMoreData();
+                } else {
+                    Toaster.quick(throwable.toString());
+                    view.showError(throwable, false);
+                }
             }
         }
     }

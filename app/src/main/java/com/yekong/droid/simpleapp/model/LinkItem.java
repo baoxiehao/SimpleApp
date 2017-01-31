@@ -4,17 +4,17 @@ package com.yekong.droid.simpleapp.model;
  * Created by baoxiehao on 17/1/27.
  */
 
-public class RssItem {
+public class LinkItem {
     public String title;
     public String url;
     public String source;
 
-    public static RssItem create(final String title, final String url, final String source) {
-        RssItem rssItem = new RssItem();
-        rssItem.title = title;
-        rssItem.url = url;
-        rssItem.source = source;
-        return rssItem;
+    public static LinkItem create(final String title, final String url, final String source) {
+        LinkItem linkItem = new LinkItem();
+        linkItem.title = title;
+        linkItem.url = url;
+        linkItem.source = source;
+        return linkItem;
     }
 
     @Override

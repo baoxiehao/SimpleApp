@@ -1,20 +1,17 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/primaryDark" />
-            <padding android:left="16dp" android:right="16dp" />
+            <solid android:color="@color/primaryDarkTransparent" />
         </shape>
     </item>
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/primaryDark" />
-            <padding android:left="16dp" android:right="16dp" />
+            <solid android:color="@color/primaryDarkTransparent" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/primary" />
-            <padding android:left="16dp" android:right="16dp" />
+            <solid android:color="@color/primaryTransparent" />
         </shape>
     </item>
 </selector>

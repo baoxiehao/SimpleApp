@@ -1,5 +1,6 @@
 package com.yekong.droid.simpleapp.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -54,6 +55,9 @@ public class HomeActivity extends BaseActivity {
     @BindView(R.id.arc_layout)
     ArcLayout mArcLayout;
 
+    int mReadIndex;
+    int mGalleryIndex;
+
     @Override
     protected void onFirstFrameDisplayed() {
         super.onFirstFrameDisplayed();
@@ -107,6 +111,11 @@ public class HomeActivity extends BaseActivity {
             } else if (id == R.id.nav_pics) {
                 mBottomNavView.selectTab(1);
             } else if (id == R.id.nav_share) {
+                Intent intent=new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, "http://fir.im/simpleapp");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(Intent.createChooser(intent, "Share SimpleApp"));
             } else if (id == R.id.nav_setting) {
             }
 
@@ -159,18 +168,24 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void showReadFragments() {
+        mGalleryIndex = mViewPager.getCurrentItem();
+
         mAdapter.addFragments(
                 getString(R.string.fragment_title_zhihu),
+                getString(R.string.fragment_title_blog),
+                getString(R.string.fragment_title_tech),
                 getString(R.string.fragment_title_gank),
                 getString(R.string.fragment_title_android));
         mAdapter.notifyDataSetChanged();
-        mViewPager.setCurrentItem(0);
+        mViewPager.setCurrentItem(mReadIndex);
     }
 
     private void showGalleryFragments() {
+        mReadIndex = mViewPager.getCurrentItem();
+
         mAdapter.addFragments(getResources().getStringArray(R.array.fragment_title_images));
         mAdapter.notifyDataSetChanged();
-        mViewPager.setCurrentItem(0);
+        mViewPager.setCurrentItem(mGalleryIndex);
     }
 
     @OnClick(R.id.fab)

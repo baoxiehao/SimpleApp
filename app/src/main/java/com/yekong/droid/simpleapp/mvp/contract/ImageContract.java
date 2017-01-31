@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.yekong.droid.simpleapp.R;
 import com.yekong.droid.simpleapp.api.GankApi;
 import com.yekong.droid.simpleapp.app.SimpleApp;
+import com.yekong.droid.simpleapp.cache.CacheManager;
 import com.yekong.droid.simpleapp.model.Gank;
 import com.yekong.droid.simpleapp.mvp.presenter.BasePagePresenter;
 import com.yekong.droid.simpleapp.mvp.view.BaseView;
@@ -83,8 +84,8 @@ public interface ImageContract {
 
         String mTitle;
 
-        boolean mIsLastPage = false;
-        String mMarker = null;
+        int mMarkerIndex = 0;
+        List<String> mMarkers = new ArrayList<>();
 
         public QiniuPresenter(String title) {
             mTitle = title;
@@ -94,35 +95,61 @@ public interface ImageContract {
         public boolean onRefreshData() {
             super.onRefreshData();
 
-            mMarker = null;
-            updatePageKey(getPageKey(mMarker), false);
-            loadPage();
+            final String keyMarkers = String.format("Markers%s", mTitle);
+
+            List<String> cachedMarkers = CacheManager.get(keyMarkers);
+            if (cachedMarkers != null) {
+                mMarkers = cachedMarkers;
+            }
+            final String marker = !mMarkers.isEmpty() ? mMarkers.get(0) : null;
+            QiniuUtils.parseBucketMarkers(marker, mTitle)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(markers -> {
+                                if (mMarkers.isEmpty()) {
+                                    mMarkers = markers;
+                                } else {
+                                    mMarkers.addAll(0, markers);
+                                }
+                                CacheManager.put(keyMarkers, mMarkers);
+                                mMarkerIndex = 0;
+                                updatePageKey(getPageKey(getCurrentMarker()), false);
+                                loadPage();
+                            },
+                            error -> onPageError(error));
             return true;
         }
 
         @Override
         public boolean onLoadMoreData() {
-            if (mIsLastPage) {
+            if (mMarkers.isEmpty()) {
                 return false;
             }
 
             super.onLoadMoreData();
 
-            updatePageKey(getPageKey(mMarker));
+            mMarkerIndex += 1;
+            updatePageKey(getPageKey(getCurrentMarker()));
             loadPage();
             return true;
         }
 
-        private void loadPage() {
-            final String pageKey = getPageKey(mMarker);
+        private String getCurrentMarker() {
+            return mMarkerIndex < mMarkers.size() ? mMarkers.get(mMarkerIndex) : null;
+        }
 
-            QiniuUtils.parseBucketKeys(mMarker, mTitle)
+        private void loadPage() {
+            final String marker = getCurrentMarker();
+            final String pageKey = getPageKey(marker);
+
+            QiniuUtils.parseBucketUrls(marker, mTitle)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(pair -> {
-                                mMarker = pair.first;
-                                onPageData(pageKey, pair.second);
-                                mIsLastPage = mMarker == null;
+                    .subscribe(urls -> {
+                                onPageData(pageKey, urls);
+                                if (urls.size() < QiniuUtils.LIMIT) {
+                                    onLoadMoreData();
+                                }
                             },
                             error -> onPageError(error));
         }

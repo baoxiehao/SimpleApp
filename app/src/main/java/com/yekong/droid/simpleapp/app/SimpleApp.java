@@ -4,8 +4,7 @@ import android.app.Application;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
-import com.github.piasy.biv.BigImageViewer;
-import com.github.piasy.biv.loader.glide.GlideImageLoader;
+import com.yekong.droid.simpleapp.cache.CacheManager;
 import com.yekong.droid.simpleapp.di.AppComponent;
 import com.yekong.droid.simpleapp.di.DaggerAppComponent;
 import com.yekong.droid.simpleapp.di.module.ContextModule;
@@ -25,8 +24,7 @@ public class SimpleApp extends Application {
                 .contextModule(new ContextModule(this))
                 .build();
 
-        BigImageViewer.initialize(
-                GlideImageLoader.with(SimpleApp.getAppComponent().getContext()));
+        CacheManager.init();
     }
 
     public static AppComponent getAppComponent() {

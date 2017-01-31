@@ -4,10 +4,11 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.util.Pair;
+import android.text.TextUtils;
 
 import com.bumptech.glide.Glide;
 import com.yekong.droid.simpleapp.app.SimpleApp;
-import com.yekong.droid.simpleapp.model.RssItem;
+import com.yekong.droid.simpleapp.model.LinkItem;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -56,21 +57,28 @@ public class WebUtils {
         return null;
     }
 
-    public static Observable<List<RssItem>> parseLinks(final String url, final String selector) {
+    public static Observable<List<LinkItem>> parseLinks(final String url, final String selector) {
         return Observable.create(subscriber -> {
             try {
-                List<RssItem> rssItems = new ArrayList<>();
+                List<LinkItem> linkItems = new ArrayList<>();
                 Document doc = Jsoup.connect(url).get();
+                final String docTitle = doc.title();
+                final String host = Uri.parse(url).getHost();
+                Logger.d("host = %s, title = %s", host, docTitle);
                 Elements elements = doc.select(selector);
-                final String prefixUrl = Uri.parse(url).getHost();
-                Logger.d("prefixUrl = %s, title = %s", prefixUrl, doc.title());
                 for (Element element : elements) {
-                    final String elementUrl = element.attr("href");
-                    if (!elementUrl.contains(prefixUrl)) {
-                        rssItems.add(RssItem.create(element.text(), elementUrl, doc.title()));
+                    final String elementTitle = element.text();
+                    String elementUrl = element.attr("href");
+                    if (elementUrl.startsWith("/")) {
+                        elementUrl = url + elementUrl;
                     }
+                    Logger.d("docTitle = %s, element: %s", docTitle, element.outerHtml());
+                    if (TextUtils.isEmpty(elementTitle)) {
+                        continue;
+                    }
+                    linkItems.add(LinkItem.create(elementTitle, elementUrl, docTitle));
                 }
-                subscriber.onNext(rssItems);
+                subscriber.onNext(linkItems);
                 subscriber.onCompleted();
             } catch (IOException e) {
                 subscriber.onError(e);

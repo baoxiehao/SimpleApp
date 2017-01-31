@@ -5,6 +5,9 @@
     <color name="primaryLight">#505050</color>
     <color name="accent">#f0f0f0</color>
 
+    <color name="primaryTransparent">#66404040</color>
+    <color name="primaryDarkTransparent">#66303030</color>
+
     <color name="icon">#ffffff</color>
     <color name="primaryText">#212121</color>
     <color name="secondaryText">#727272</color>

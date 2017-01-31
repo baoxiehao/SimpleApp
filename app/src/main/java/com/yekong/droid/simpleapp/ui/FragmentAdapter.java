@@ -38,10 +38,14 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
         RecyclerPageFragment fragment = null;
         if (TextUtils.equals(context.getString(R.string.fragment_title_zhihu), title)) {
             fragment = new ZhiHuFragment();
+        } else if (TextUtils.equals(context.getString(R.string.fragment_title_tech), title)) {
+            fragment = new TechFragment();
+        } else if (TextUtils.equals(context.getString(R.string.fragment_title_blog), title)) {
+            fragment = new BlogFragment();
         } else if (TextUtils.equals(context.getString(R.string.fragment_title_gank), title)) {
             fragment = new GankFragment();
         } else if (TextUtils.equals(context.getString(R.string.fragment_title_android), title)) {
-            fragment = new RssFragment();
+            fragment = new AndroidFragment();
         } else {
             fragment = new ImageFragmentBuilder(title).build();
         }

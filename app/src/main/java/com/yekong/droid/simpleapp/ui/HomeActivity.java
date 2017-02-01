@@ -22,10 +22,13 @@ import com.yekong.droid.simpleapp.ui.base.BaseActivity;
 import com.yekong.droid.simpleapp.util.ArcLayoutUtils;
 import com.yekong.droid.simpleapp.util.EventUtils;
 import com.yekong.droid.simpleapp.util.Logger;
+import com.yekong.droid.simpleapp.util.QiniuUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class HomeActivity extends BaseActivity {
 
@@ -57,6 +60,7 @@ public class HomeActivity extends BaseActivity {
 
     int mReadIndex;
     int mGalleryIndex;
+    String[] mBucketPrefixes;
 
     @Override
     protected void onFirstFrameDisplayed() {
@@ -183,9 +187,21 @@ public class HomeActivity extends BaseActivity {
     private void showGalleryFragments() {
         mReadIndex = mViewPager.getCurrentItem();
 
-        mAdapter.addFragments(getResources().getStringArray(R.array.fragment_title_images));
-        mAdapter.notifyDataSetChanged();
-        mViewPager.setCurrentItem(mGalleryIndex);
+        if (mBucketPrefixes != null) {
+            mAdapter.addFragments(mBucketPrefixes);
+            mAdapter.notifyDataSetChanged();
+            mViewPager.setCurrentItem(mGalleryIndex);
+        } else {
+            QiniuUtils.parseBucketPrefixes()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(bucketPrefixes -> {
+                        mBucketPrefixes = bucketPrefixes.toArray(new String[0]);
+                        mAdapter.addFragments(mBucketPrefixes);
+                        mAdapter.notifyDataSetChanged();
+                        mViewPager.setCurrentItem(mGalleryIndex);
+                    });
+        }
     }
 
     @OnClick(R.id.fab)

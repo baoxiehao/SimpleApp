@@ -45,50 +45,73 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+    // Android support
     compile "com.android.support:appcompat-v7:$support"
     compile "com.android.support:design:$support"
     compile "com.android.support:support-v4:$support"
     compile "com.android.support:recyclerview-v7:$support"
     compile "com.android.support:cardview-v7:$support"
 
-    compile 'com.github.githubwing:ByeBurger:1.2.3'
-
+    // EventBus
     compile "org.greenrobot:eventbus:$eventbus"
 
+    // ButterKnife
     compile "com.jakewharton:butterknife:$butterknife"
     apt "com.jakewharton:butterknife-compiler:$butterknife"
 
+    // RxJava
+    compile "io.reactivex:rxjava:$rx"
+    compile "io.reactivex:rxandroid:$rx"
+
+    // RxBinding
+    compile 'com.jakewharton.rxbinding:rxbinding:1.0.0'
+
+    // Retrofit
     compile "com.squareup.retrofit2:retrofit:$retrofit"
     compile "com.squareup.retrofit2:converter-gson:$retrofit"
     compile "com.squareup.retrofit2:adapter-rxjava:$retrofit"
     compile "com.google.code.gson:gson:2.5"
 
+    // Dagger
     compile "com.google.dagger:dagger:$dagger"
     apt "com.google.dagger:dagger-compiler:$dagger"
 
+    // MVP mosby
     compile "com.hannesdorfmann.mosby:mvp:$mosby"
     compile "com.hannesdorfmann.mosby:viewstate:$mosby"
 
-    compile 'de.hdodenhof:circleimageview:2.0.0'
+    // MaterialProgressBar for loading view
     compile 'me.zhanghai.android.materialprogressbar:library:1.1.4'
+
+    // Recycler view adapter helper for easy recycler operations
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v1.9.7'
+
+    // TkRefreshLayout for refreshing and loading more
     compile 'com.lcodecorex:tkrefreshlayout:1.0.5'
 
+    // Glide for image loading
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
-    compile 'com.github.piasy:GlideImageLoader:1.2.2'
+    // CircleImageView
+    compile 'de.hdodenhof:circleimageview:2.0.0'
 
-    compile "io.reactivex:rxjava:$rx"
-    compile "io.reactivex:rxandroid:$rx"
-
-    compile 'com.thefinestartist:finestwebview:1.2.7'
-    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v1.9.7'
+    // Recycler view pager for image browsing
     compile 'com.github.lsjwzh.RecyclerViewPager:lib:v1.1.2'
 
+    // FinestWebView for web browsing
+    compile 'com.thefinestartist:finestwebview:1.2.7'
+
+    // Paper db for caching
     compile 'io.paperdb:paperdb:2.0'
-    
+
+    // ArcLayout for FAB menu
     compile 'com.ogaclejapan.arclayout:library:1.1.0@aar'
 
+    // BottomNavigation
     compile 'com.github.armcha:LuseenBottomNavigation:1.8.2'
+
+    // ByeBurger for scroll behaviour
+    compile 'com.github.githubwing:ByeBurger:1.2.3'
 
     // Jsoup HTML parser library @ http://jsoup.org/
     compile 'org.jsoup:jsoup:1.10.2'
@@ -100,6 +123,7 @@ dependencies {
     compile 'com.hannesdorfmann.fragmentargs:annotation:3.0.2'
     apt 'com.hannesdorfmann.fragmentargs:processor:3.0.2'
 
+    // AsyncJob for easy background task
     compile 'com.arasthel:asyncjob-library:1.0.3'
 
     testCompile 'junit:junit:4.12'

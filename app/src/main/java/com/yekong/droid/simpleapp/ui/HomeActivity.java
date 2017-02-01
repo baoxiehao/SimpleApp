@@ -13,16 +13,22 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.jakewharton.rxbinding.view.RxView;
 import com.luseen.luseenbottomnavigation.BottomNavigation.BottomNavigationItem;
 import com.luseen.luseenbottomnavigation.BottomNavigation.BottomNavigationView;
 import com.ogaclejapan.arclayout.ArcLayout;
 import com.yekong.droid.simpleapp.R;
+import com.yekong.droid.simpleapp.cache.CacheManager;
 import com.yekong.droid.simpleapp.mvp.common.UserCase;
 import com.yekong.droid.simpleapp.ui.base.BaseActivity;
 import com.yekong.droid.simpleapp.util.ArcLayoutUtils;
 import com.yekong.droid.simpleapp.util.EventUtils;
 import com.yekong.droid.simpleapp.util.Logger;
 import com.yekong.droid.simpleapp.util.QiniuUtils;
+import com.yekong.droid.simpleapp.util.Toaster;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,7 +66,7 @@ public class HomeActivity extends BaseActivity {
 
     int mReadIndex;
     int mGalleryIndex;
-    String[] mBucketPrefixes;
+    List<String> mBucketPrefixes;
 
     @Override
     protected void onFirstFrameDisplayed() {
@@ -95,6 +101,25 @@ public class HomeActivity extends BaseActivity {
         toggle.syncState();
 
         mDrawerLayout.addOnLayoutChangeListener((view, i, i1, i2, i3, i4, i5, i6, i7) -> {
+            View navImageView = mNavView.findViewById(R.id.navImageView);
+            if (navImageView != null) {
+                RxView.clicks(navImageView)
+                        .buffer(1, TimeUnit.SECONDS)
+                        .filter(clicks -> clicks.size() > 0)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(clicks -> {
+                            Logger.d("Fuli clicks: %s", clicks.size());
+                            if (clicks.size() >= 5) {
+                                if (CacheManager.contains("Fuli")) {
+                                    Toaster.quick("Fuli has been opened!");
+                                } else {
+                                    Toaster.quick("Fuli will be shown!");
+                                    CacheManager.put("Fuli", true);
+                                }
+                            }
+                        });
+            }
+
             View navAuthorContainer = mNavView.findViewById(R.id.nav_author_container);
             if (navAuthorContainer != null) {
                 navAuthorContainer.setOnClickListener(v -> {
@@ -188,7 +213,10 @@ public class HomeActivity extends BaseActivity {
         mReadIndex = mViewPager.getCurrentItem();
 
         if (mBucketPrefixes != null) {
-            mAdapter.addFragments(mBucketPrefixes);
+            if (CacheManager.contains("Fuli")) {
+                mBucketPrefixes.add(0, "福利");
+            }
+            mAdapter.addFragments(mBucketPrefixes.toArray(new String[0]));
             mAdapter.notifyDataSetChanged();
             mViewPager.setCurrentItem(mGalleryIndex);
         } else {
@@ -196,8 +224,8 @@ public class HomeActivity extends BaseActivity {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(bucketPrefixes -> {
-                        mBucketPrefixes = bucketPrefixes.toArray(new String[0]);
-                        mAdapter.addFragments(mBucketPrefixes);
+                        mBucketPrefixes = bucketPrefixes;
+                        mAdapter.addFragments(mBucketPrefixes.toArray(new String[0]));
                         mAdapter.notifyDataSetChanged();
                         mViewPager.setCurrentItem(mGalleryIndex);
                     });

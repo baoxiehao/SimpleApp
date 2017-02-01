@@ -16,12 +16,12 @@ import java.util.List;
  */
 
 public class GankFragment extends RecyclerPageFragment<
-        Gank.Article, GankContract.Article.View, GankContract.Article.Presenter>
-        implements GankContract.Article.View {
+        Gank.Article, GankContract.View, GankContract.Presenter>
+        implements GankContract.View {
 
     @Override
-    public GankContract.Article.Presenter createPresenter() {
-        return new GankContract.Article.Presenter();
+    public GankContract.Presenter createPresenter() {
+        return new GankContract.Presenter();
     }
 
     @Override

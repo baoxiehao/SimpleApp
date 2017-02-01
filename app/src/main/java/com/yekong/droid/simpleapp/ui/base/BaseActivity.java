@@ -1,8 +1,9 @@
 package com.yekong.droid.simpleapp.ui.base;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+
+import com.yekong.droid.simpleapp.util.Logger;
 
 /**
  * Created by baoxiehao on 17/1/26.
@@ -11,11 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 public class BaseActivity extends AppCompatActivity {
 
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         getWindow().getDecorView().post(() -> onFirstFrameDisplayed());
     }
 
     protected void onFirstFrameDisplayed() {
+        Logger.d("onFirstFrameDisplayed");
     }
 }

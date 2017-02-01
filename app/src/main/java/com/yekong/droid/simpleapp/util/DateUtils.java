@@ -12,15 +12,25 @@ public class DateUtils {
     public static String dateToString(Date date) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
-        return String.format("%s-%s-%s",
+        return String.format("%s-%02d-%02d",
                 c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH));
     }
 
-    public static String timeToFileName() {
+    public static String timeToFileName(long timeInMillis, String fileName) {
+        final int index = fileName.lastIndexOf(".");
+        String fileSuffix = fileName;
+        if (index > 0) {
+            fileSuffix = fileName.substring(index + 1);
+        }
+        return String.format("%s.%s", DateUtils.timeToFileName(timeInMillis), fileSuffix);
+    }
+
+    private static String timeToFileName(long timeInMillis) {
         Calendar c = Calendar.getInstance();
-        return String.format("%s-%s-%s_%s-%s-%s",
+        c.setTimeInMillis(timeInMillis);
+        return String.format("%s-%02d-%02d_%02d.%02d.%02d",
                 c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH),
-                c.get(Calendar.HOUR), c.get(Calendar.MINUTE), c.get(Calendar.SECOND));
+                c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), c.get(Calendar.SECOND));
     }
 
     public static Calendar getCalendar(final int year, final int month, final int dayOfMonth) {

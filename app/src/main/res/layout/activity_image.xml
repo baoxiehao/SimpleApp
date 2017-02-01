@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
+    android:background="@android:color/background_dark"
     tools:context="com.yekong.droid.simpleapp.ui.ImageActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
@@ -30,7 +30,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:background="@drawable/bg_semi_transparent"
             android:orientation="horizontal"
             tools:ignore="UselessParent">
 
@@ -40,7 +39,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/bg_semi_transparent"
+                android:background="@drawable/bg_overlay_transparent"
                 android:text="@string/save_image"
                 android:textColor="@android:color/white" />
         </LinearLayout>

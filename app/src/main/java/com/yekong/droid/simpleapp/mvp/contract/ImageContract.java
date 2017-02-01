@@ -10,6 +10,7 @@ import com.yekong.droid.simpleapp.cache.CacheManager;
 import com.yekong.droid.simpleapp.model.Gank;
 import com.yekong.droid.simpleapp.mvp.presenter.BasePagePresenter;
 import com.yekong.droid.simpleapp.mvp.view.BaseView;
+import com.yekong.droid.simpleapp.util.Logger;
 import com.yekong.droid.simpleapp.util.QiniuUtils;
 
 import java.util.ArrayList;
@@ -95,25 +96,23 @@ public interface ImageContract {
         public boolean onRefreshData() {
             super.onRefreshData();
 
-            final String keyMarkers = String.format("Markers%s", mTitle);
+            final String keyMarkers = String.format("Markers-%s", mTitle);
 
             List<String> cachedMarkers = CacheManager.get(keyMarkers);
             if (cachedMarkers != null) {
                 mMarkers = cachedMarkers;
+                Logger.d("onRefreshData(): title = %s, cachedMarkers = %s", mTitle, TextUtils.join(", ", cachedMarkers));
             }
-            final String marker = !mMarkers.isEmpty() ? mMarkers.get(0) : null;
+
+            mMarkerIndex = 0;
+            final String marker = getCurrentMarker();
             QiniuUtils.parseBucketMarkers(marker, mTitle)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(markers -> {
-                                if (mMarkers.isEmpty()) {
-                                    mMarkers = markers;
-                                } else {
-                                    mMarkers.addAll(0, markers);
-                                }
+                                mMarkers.addAll(0, markers);
                                 CacheManager.put(keyMarkers, mMarkers);
-                                mMarkerIndex = 0;
-                                updatePageKey(getPageKey(getCurrentMarker()), false);
+                                updatePageKey(getPageKey(marker), false);
                                 loadPage();
                             },
                             error -> onPageError(error));
@@ -135,7 +134,9 @@ public interface ImageContract {
         }
 
         private String getCurrentMarker() {
-            return mMarkerIndex < mMarkers.size() ? mMarkers.get(mMarkerIndex) : null;
+            final String marker = mMarkerIndex < mMarkers.size() ? mMarkers.get(mMarkerIndex) : null;
+            Logger.d("getCurrentMarker(): title = %s, index = %s, marker = %s", mTitle, mMarkerIndex, marker);
+            return marker;
         }
 
         private void loadPage() {
@@ -147,7 +148,9 @@ public interface ImageContract {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(urls -> {
                                 onPageData(pageKey, urls);
-                                if (urls.size() < QiniuUtils.LIMIT) {
+                                // Auto reload when not last page
+                                if (urls.size() < QiniuUtils.LIMIT && marker != null) {
+                                    Logger.d("loadPage(): title = %s, auto reload when not last page", mTitle);
                                     onLoadMoreData();
                                 }
                             },

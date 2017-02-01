@@ -22,10 +22,6 @@ public abstract class BasePagePresenter<V extends BaseView, M> extends BasePrese
 
     protected HashMap<String, List<M>> mPageDataMap = new HashMap<>();
 
-    protected boolean isNumericPage() {
-        return true;
-    }
-
     /**
      * Should be overridden by non numeric page,
      * so you should override this method when overriding isNumericPage() which returns false
@@ -71,7 +67,7 @@ public abstract class BasePagePresenter<V extends BaseView, M> extends BasePrese
     }
 
     protected void onPageData(String page, List<M> data) {
-        Logger.d("onPageData(): tag=%s, numericPage=%s, page=%s, count=%s", tag(), isNumericPage(), page, data.size());
+        Logger.d("onPageData(): tag=%s, page=%s, count=%s", tag(), page, data.size());
         mPageDataMap.put(page, data);
         updateData();
         showDataOrError(new Exception("No Data"));

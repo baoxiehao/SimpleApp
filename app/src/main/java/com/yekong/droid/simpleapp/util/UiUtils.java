@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.request.RequestListener;
 import com.yekong.droid.simpleapp.app.SimpleApp;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
@@ -24,6 +25,13 @@ public class UiUtils {
     public static void loadImage(ImageView imageView, final String imageUrl, final Priority priority) {
         Glide.with(SimpleApp.getAppComponent().getContext())
                 .load(Uri.parse(imageUrl))
+                .priority(priority)
+                .into(imageView);    }
+
+    public static void loadImage(ImageView imageView, final String imageUrl, final Priority priority, RequestListener listener) {
+        Glide.with(SimpleApp.getAppComponent().getContext())
+                .load(Uri.parse(imageUrl))
+                .listener(listener)
                 .priority(priority)
                 .into(imageView);
     }

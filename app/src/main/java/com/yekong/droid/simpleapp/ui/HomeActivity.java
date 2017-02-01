@@ -22,6 +22,7 @@ import com.yekong.droid.simpleapp.cache.CacheManager;
 import com.yekong.droid.simpleapp.mvp.common.UserCase;
 import com.yekong.droid.simpleapp.ui.base.BaseActivity;
 import com.yekong.droid.simpleapp.util.ArcLayoutUtils;
+import com.yekong.droid.simpleapp.util.Constants;
 import com.yekong.droid.simpleapp.util.EventUtils;
 import com.yekong.droid.simpleapp.util.Logger;
 import com.yekong.droid.simpleapp.util.QiniuUtils;
@@ -71,12 +72,11 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onFirstFrameDisplayed() {
         super.onFirstFrameDisplayed();
-        Logger.d("onFirstFrameDisplayed");
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme_NoActionBar);
+        setTheme(R.style.AppTheme_HomeActivity);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
@@ -110,11 +110,11 @@ public class HomeActivity extends BaseActivity {
                         .subscribe(clicks -> {
                             Logger.d("Fuli clicks: %s", clicks.size());
                             if (clicks.size() >= 5) {
-                                if (CacheManager.contains("Fuli")) {
+                                if (CacheManager.contains(Constants.PREF_KEY_FULI)) {
                                     Toaster.quick("Fuli has been opened!");
                                 } else {
                                     Toaster.quick("Fuli will be shown!");
-                                    CacheManager.put("Fuli", true);
+                                    CacheManager.put(Constants.PREF_KEY_FULI, true);
                                 }
                             }
                         });
@@ -142,9 +142,9 @@ public class HomeActivity extends BaseActivity {
             } else if (id == R.id.nav_share) {
                 Intent intent=new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT, "http://fir.im/simpleapp");
+                intent.putExtra(Intent.EXTRA_TEXT, Constants.URL_APP_SHARE);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(Intent.createChooser(intent, "Share SimpleApp"));
+                startActivity(Intent.createChooser(intent, Constants.TITLE_APP_SHARE));
             } else if (id == R.id.nav_setting) {
             }
 
@@ -213,8 +213,9 @@ public class HomeActivity extends BaseActivity {
         mReadIndex = mViewPager.getCurrentItem();
 
         if (mBucketPrefixes != null) {
-            if (CacheManager.contains("Fuli")) {
-                mBucketPrefixes.add(0, "福利");
+            if (CacheManager.contains(Constants.PREF_KEY_FULI)
+                    && !mBucketPrefixes.contains(Constants.PREF_KEY_FULI)) {
+                mBucketPrefixes.add(0, Constants.PREF_KEY_FULI);
             }
             mAdapter.addFragments(mBucketPrefixes.toArray(new String[0]));
             mAdapter.notifyDataSetChanged();

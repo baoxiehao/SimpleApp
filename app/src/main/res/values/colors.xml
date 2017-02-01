@@ -5,8 +5,8 @@
     <color name="primaryLight">#505050</color>
     <color name="accent">#f0f0f0</color>
 
-    <color name="primaryTransparent">#66404040</color>
-    <color name="primaryDarkTransparent">#66303030</color>
+    <color name="primaryTransparent">#88404040</color>
+    <color name="primaryDarkTransparent">#88303030</color>
 
     <color name="icon">#ffffff</color>
     <color name="primaryText">#212121</color>
@@ -19,12 +19,6 @@
     <color name="divider">#b6b6b6</color>
     <color name="card_normal">#ffffff</color>
     <color name="card_pressed">#08000000</color>
-
-    <integer-array name="swipe_progress">
-        <item>@color/primary</item>
-        <item>@color/primaryDark</item>
-        <item>@color/accent</item>
-    </integer-array>
 
     <color name="black_overlay">#66000000</color>
 </resources>

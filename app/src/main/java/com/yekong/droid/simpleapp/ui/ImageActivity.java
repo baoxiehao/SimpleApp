@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.util.Pair;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,10 +13,14 @@ import android.widget.ImageView;
 
 import com.arasthel.asyncjob.AsyncJob;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.jakewharton.rxbinding.view.RxView;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 import com.yekong.droid.simpleapp.R;
+import com.yekong.droid.simpleapp.ui.base.BaseActivity;
 import com.yekong.droid.simpleapp.util.EventUtils;
 import com.yekong.droid.simpleapp.util.Toaster;
 import com.yekong.droid.simpleapp.util.UiUtils;
@@ -26,12 +29,13 @@ import com.yekong.droid.simpleapp.util.WebUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import rx.android.schedulers.AndroidSchedulers;
 
-public class ImageActivity extends AppCompatActivity {
+public class ImageActivity extends BaseActivity {
     public static final String ACTION = "com.yekong.droid.simpleapp.action.VIEW_IMAGE";
     public static final String EXTRA_TITLE = "EXTRA_TITLE";
     public static final String EXTRA_URLS = "EXTRA_URLS";
@@ -108,6 +112,8 @@ public class ImageActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle(mTitle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // Make the action bar transparent
+        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_overlay_transparent));
 
         LinearLayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerViewPager.setLayoutManager(layout);
@@ -124,11 +130,11 @@ public class ImageActivity extends AppCompatActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         mSaveImageButton.setOnTouchListener(mDelayHideTouchListener);
-    }
 
-    @OnClick(R.id.saveImageButton)
-    public void onClick(View view) {
-        downloadImage(mUrls.get(mRecyclerViewPager.getCurrentPosition()));
+        RxView.clicks(mSaveImageButton)
+                .throttleFirst(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(Void -> downloadImage(mUrls.get(mRecyclerViewPager.getCurrentPosition())));
     }
 
     @Override
@@ -198,13 +204,27 @@ public class ImageActivity extends AppCompatActivity {
         @Override
         protected void convert(BaseViewHolder baseViewHolder, String url) {
             ImageView imageView = baseViewHolder.getView(R.id.imageView);
-            UiUtils.loadImage(imageView, url, mPos == mUrls.indexOf(url) ? Priority.IMMEDIATE : Priority.NORMAL);
+            UiUtils.loadImage(imageView, url,
+                    mPos == mUrls.indexOf(url) ? Priority.IMMEDIATE : Priority.NORMAL,
+                    new RequestListener() {
+                        @Override
+                        public boolean onException(Exception e, Object model, Target target, boolean isFirstResource) {
+                            Toaster.quick("Load failed!");
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Object resource, Object model, Target target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            baseViewHolder.getView(R.id.loadingView).setVisibility(View.GONE);
+                            return false;
+                        }
+                    });
+
             // Set up the user interaction to manually show or hide the system UI.
-            imageView.setOnClickListener(view -> toggle());
-            imageView.setOnLongClickListener((view) -> {
-                downloadImage(url);
-                return true;
-            });
+            RxView.clicks(imageView)
+                    .throttleFirst(1, TimeUnit.SECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(Void -> toggle());
         }
     }
 

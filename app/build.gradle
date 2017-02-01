@@ -29,7 +29,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
+
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.1'
+    }}
 
 def support = '25.0.0'
 def butterknife = '8.4.0'
@@ -41,9 +44,6 @@ def rx = '1.1.0'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
 
     // Android support
     compile "com.android.support:appcompat-v7:$support"
@@ -58,6 +58,7 @@ dependencies {
     // ButterKnife
     compile "com.jakewharton:butterknife:$butterknife"
     apt "com.jakewharton:butterknife-compiler:$butterknife"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife"
 
     // RxJava
     compile "io.reactivex:rxjava:$rx"
@@ -127,5 +128,7 @@ dependencies {
     compile 'com.arasthel:asyncjob-library:1.0.3'
 
     testCompile 'junit:junit:4.12'
-    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife"
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
 }

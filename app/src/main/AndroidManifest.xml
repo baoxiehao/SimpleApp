@@ -16,7 +16,7 @@
         <activity
             android:name=".ui.HomeActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.Startup">
+            android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,10 +28,29 @@
             android:name=".ui.ImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_image"
-            android:theme="@style/AppTheme.Fullscreen">
+            android:theme="@style/AppTheme.ImageActivity">
             <intent-filter>
                 <action android:name="com.yekong.droid.simpleapp.action.VIEW_IMAGE" />
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".ui.ShareActivity"
+            android:theme="@style/AppTheme.ShareActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
 
@@ -39,7 +58,7 @@
             android:name="com.thefinestartist.finestwebview.FinestWebViewActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="sensor"
-            android:theme="@style/AppTheme.NoActionBar.Web" />
+            android:theme="@style/AppTheme.WebActivity" />
     </application>
 
 </manifest>

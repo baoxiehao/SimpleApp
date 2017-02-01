@@ -18,6 +18,14 @@ public class Logger {
         Log.d(TAG, String.format(message, args));
     }
 
+    public static void w(String message) {
+        Log.w(TAG, message);
+    }
+
+    public static void w(String message, Object... args) {
+        Log.w(TAG, String.format(message, args));
+    }
+
     public static void e(String message, Throwable throwable) {
         Log.e(TAG, message, throwable);
     }

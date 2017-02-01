@@ -8,15 +8,47 @@
         <item name="colorAccent">@color/accent</item>
     </style>
 
-    <style name="AppTheme.Startup">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@drawable/bg_start_window</item>
-    </style>
-
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.Transparent" parent="AppTheme.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="AppTheme.Splash" parent="AppTheme.NoActionBar">
+        <item name="android:windowBackground">@drawable/bg_start_window</item>
+    </style>
+
+    <style name="AppTheme.HomeActivity" parent="AppTheme.NoActionBar">
+    </style>
+
+    <style name="AppTheme.WebActivity" parent="AppTheme.NoActionBar">
+        <item name="colorAccent">@color/primaryDark</item>
+        <item name="android:textColorPrimary">@color/icon</item>
+        <item name="android:textColorSecondary">@color/icon</item>
+    </style>
+
+    <style name="AppTheme.ImageActivity">
+        <item name="android:actionBarStyle">@style/ActionBar.ImageActivity</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="AppTheme.ShareActivity" parent="AppTheme.Transparent">
+    </style>
+
+    <style name="ActionBar.ImageActivity" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="android:backgroundStacked">@color/black_overlay</item>
+        <item name="android:backgroundSplit">@color/black_overlay</item>
     </style>
 
     <style name="AppTheme.Light" parent="ThemeOverlay.AppCompat.Light"></style>
@@ -25,37 +57,25 @@
 
     <style name="AppTheme.Dark.ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.NoActionBar.Web">
-        <item name="colorAccent">@color/primaryDark</item>
-        <item name="android:textColorPrimary">@color/icon</item>
-        <item name="android:textColorSecondary">@color/icon</item>
-    </style>
-
-    <style name="AppTheme.Fullscreen">
-        <item name="android:actionBarStyle">@style/ActionBar.Fullscreen</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
-        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
-    </style>
-
-    <style name="ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/black_overlay</item>
-    </style>
-
-    <style name="List.Primary" parent="@style/TextAppearance.AppCompat.Title">
+    <style name="Text.List.Primary" parent="@style/TextAppearance.AppCompat.Title">
         <item name="android:textSize">16sp</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="List.Secondary" parent="@style/TextAppearance.AppCompat.Medium">
+    <style name="Text.List.Secondary" parent="@style/TextAppearance.AppCompat.Medium">
         <item name="android:textSize">14sp</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="ArcItem">
+    <style name="Text.Progress" parent="@style/TextAppearance.AppCompat.Large">
+        <item name="android:textSize">16sp</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Button.Menu.ArcItem" parent="TextAppearance.AppCompat">
         <item name="android:layout_width">48dp</item>
         <item name="android:layout_height">48dp</item>
         <item name="android:textSize">18sp</item>

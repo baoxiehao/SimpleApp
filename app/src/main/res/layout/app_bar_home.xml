@@ -111,25 +111,25 @@
 
             <ImageButton
                 android:id="@+id/fab_setting"
-                style="@style/ArcItem"
+                style="@style/Button.Menu.ArcItem"
                 android:src="@drawable/ic_fab_setting"
                 app:arc_angle="10" />
 
             <ImageButton
                 android:id="@+id/fab_favorite"
-                style="@style/ArcItem"
+                style="@style/Button.Menu.ArcItem"
                 android:src="@drawable/ic_fab_favorite"
                 app:arc_angle="33" />
 
             <ImageButton
                 android:id="@+id/fab_search"
-                style="@style/ArcItem"
+                style="@style/Button.Menu.ArcItem"
                 android:src="@drawable/ic_fab_search"
                 app:arc_angle="56" />
 
             <ImageButton
                 android:id="@+id/fab_up"
-                style="@style/ArcItem"
+                style="@style/Button.Menu.ArcItem"
                 android:src="@drawable/ic_fab_up"
                 app:arc_angle="79" />
         </com.ogaclejapan.arclayout.ArcLayout>

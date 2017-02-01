@@ -35,9 +35,6 @@
         <item>气质</item>
     </string-array>
 
-    <string name="error_require_email">Error, email is required</string>
-    <string name="error_require_password">Error, password is required</string>
-
     <string name="mvp_empty_tip">Empty</string>
     <string name="mvp_error_tip">Error</string>
 

@@ -124,7 +124,8 @@ public class QiniuUtils {
                 List<String> urls = new ArrayList<>();
                 fileListing = bucketManager.listFiles(BUCKET_NAME, prefix, marker, LIMIT, null);
                 FileInfo[] fileInfos = fileListing.items;
-                // Files returned are ordered by their names, reverse them so that latest name first
+                // Files are ordered by their names in ascend order, so the last file has final marker.
+                // Now reverse them so that late ordered files first, i.e. we are returning files in descend order.
                 for (int n = fileInfos.length, i = n - 1; i >= 0; i--) {
                     final String url = String.format("%s/%s", BUCKET_DOMAIN, fileInfos[i].key);
                     urls.add(url);

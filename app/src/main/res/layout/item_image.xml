@@ -8,6 +8,7 @@
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="horizontal"
     card_view:cardBackgroundColor="@color/cardview_light_background"
+    card_view:cardElevation="1dp"
     card_view:cardCornerRadius="@dimen/card_view_corner_radius">
 
     <ImageView

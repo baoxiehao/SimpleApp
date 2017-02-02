@@ -1,5 +1,8 @@
 package com.yekong.droid.simpleapp.ui;
 
+import android.text.TextUtils;
+import android.view.View;
+
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.yekong.droid.simpleapp.R;
 import com.yekong.droid.simpleapp.model.LinkItem;
@@ -33,13 +36,19 @@ public class AndroidFragment extends RecyclerPageFragment<
     class ListAdapter extends BaseAdapter<LinkItem> {
 
         public ListAdapter(List<LinkItem> data) {
-            super(R.layout.item_text_2, data);
+            super(R.layout.item_text_3, data);
         }
 
         @Override
         protected void convert(BaseViewHolder baseViewHolder, LinkItem linkItem) {
             baseViewHolder.setText(R.id.primaryText, linkItem.title);
             baseViewHolder.setText(R.id.secondaryText, linkItem.source);
+            if (TextUtils.isEmpty(linkItem.desc)) {
+                baseViewHolder.getView(R.id.previewText).setVisibility(View.GONE);
+            } else {
+                baseViewHolder.getView(R.id.previewText).setVisibility(View.VISIBLE);
+                baseViewHolder.setText(R.id.previewText, linkItem.desc);
+            }
         }
     }
 }

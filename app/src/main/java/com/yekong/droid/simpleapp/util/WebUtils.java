@@ -74,19 +74,30 @@ public class WebUtils {
                 Document doc = Jsoup.connect(url).get();
                 final String docTitle = doc.title();
                 final String host = Uri.parse(url).getHost();
-                Logger.d("parseLinks(): host = %s, title = %s", host, docTitle);
                 Elements elements = doc.select(selector);
                 for (Element element : elements) {
-                    final String elementTitle = element.text();
+                    final String elementTitle = element.text().trim();
                     String elementUrl = element.attr("href");
                     if (elementUrl.startsWith("/")) {
                         elementUrl = url + elementUrl;
                     }
-                    Logger.d("parseLinks(): docTitle = %s, element: %s", docTitle, element.outerHtml());
+                    Logger.d("parseLinks(): host = %s, docTitle = %s\n element: %s", host, docTitle, element.outerHtml());
                     if (TextUtils.isEmpty(elementTitle)) {
                         continue;
                     }
-                    linkItems.add(LinkItem.create(elementTitle, elementUrl, docTitle));
+
+                    // Find parent first
+                    String elementDesc = element.parent().text();
+                    if (TextUtils.isEmpty(elementDesc)) {
+                        // Then next to parent
+                        elementDesc = element.parent().nextElementSibling().text();
+                    }
+                    // Desc may repeat the title at the beginning
+                    elementDesc = elementDesc.replaceFirst(elementTitle, "").trim();
+
+                    LinkItem linkItem = LinkItem.create(elementTitle, elementUrl, elementDesc, docTitle);
+                    Logger.d("parseLinks(): add link %s", linkItem);
+                    linkItems.add(linkItem);
                 }
                 subscriber.onNext(linkItems);
                 subscriber.onCompleted();

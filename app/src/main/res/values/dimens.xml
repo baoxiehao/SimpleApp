@@ -18,6 +18,7 @@
     <dimen name="card_view_text_margin_v">4dp</dimen>
     <dimen name="card_view_margin">2dp</dimen>
     <dimen name="card_view_content_padding_h">10dp</dimen>
+    <dimen name="card_view_content_padding_v">8dp</dimen>
     <dimen name="card_view_content_margin_h">8dp</dimen>
     <dimen name="card_view_content_margin_v">8dp</dimen>
 </resources>

@@ -14,6 +14,7 @@ import com.yekong.droid.simpleapp.util.Logger;
 import com.yekong.droid.simpleapp.util.QiniuUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;

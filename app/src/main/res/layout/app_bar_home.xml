@@ -88,7 +88,7 @@
         android:src="@drawable/ic_add"
         app:backgroundTint="@color/primary"
         app:elevation="6dp"
-        app:fabSize="normal"
+        app:fabSize="mini"
         app:layout_behavior="@string/bye_burger_float_behavior"
         app:pressedTranslationZ="12dp" />
 

@@ -65,8 +65,12 @@ public class HomeActivity extends BaseActivity {
     @BindView(R.id.arc_layout)
     ArcLayout mArcLayout;
 
-    int mReadIndex;
-    int mGalleryIndex;
+    final static int NAV_COUNT = 3;
+    final static int INDEX_GANK = 0;
+    final static int INDEX_READ = 1;
+    final static int INDEX_GALLERY = 2;
+
+    int[] mIndexes = new int[NAV_COUNT];
     List<String> mBucketPrefixes;
 
     @Override
@@ -135,12 +139,14 @@ public class HomeActivity extends BaseActivity {
             // Handle navigation view item clicks here.
             int id = item.getItemId();
 
-            if (id == R.id.nav_news) {
-                mBottomNavView.selectTab(0);
+            if (id == R.id.nav_gank) {
+                mBottomNavView.selectTab(INDEX_GANK);
+            } else if (id == R.id.nav_read) {
+                mBottomNavView.selectTab(INDEX_READ);
             } else if (id == R.id.nav_pics) {
-                mBottomNavView.selectTab(1);
+                mBottomNavView.selectTab(INDEX_GALLERY);
             } else if (id == R.id.nav_share) {
-                Intent intent=new Intent(Intent.ACTION_SEND);
+                Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_TEXT, Constants.URL_APP_SHARE);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -155,15 +161,32 @@ public class HomeActivity extends BaseActivity {
 
     private void initViewPager() {
         mAdapter = new FragmentAdapter(getSupportFragmentManager());
-        if (mViewPager != null) {
-            mViewPager.setAdapter(mAdapter);
-            TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-            tabLayout.setupWithViewPager(mViewPager);
-        }
+        mViewPager.setAdapter(mAdapter);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(mViewPager);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mIndexes[mBottomNavView.getCurrentItem()] = mViewPager.getCurrentItem();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
         showReadFragments();
     }
 
     private void initBottomNavView() {
+        mBottomNavView.addTab(new BottomNavigationItem(
+                getString(R.string.nav_menu_gank),
+                getResources().getColor(R.color.primary),
+                R.drawable.ic_nav_bottom_news)
+        );
         mBottomNavView.addTab(new BottomNavigationItem(
                 getString(R.string.nav_menu_read),
                 getResources().getColor(R.color.primary),
@@ -175,43 +198,48 @@ public class HomeActivity extends BaseActivity {
                 R.drawable.ic_nav_bottom_pics)
         );
         mBottomNavView.setOnBottomNavigationItemClickListener((index) -> {
-            if (index == 0) {
+            if (index == INDEX_GANK) {
+                showGankFragments();
+            } else if (index == INDEX_READ) {
                 showReadFragments();
-            } else if (index == 1) {
+            } else {
                 showGalleryFragments();
             }
         });
-        mBottomNavView.selectTab(0);
+        mBottomNavView.selectTab(INDEX_READ);
     }
 
     private void initArcLayout() {
         mMenuLayout.setOnTouchListener((view, motionEvent) -> {
-                if (mMenuLayout.getVisibility() != View.INVISIBLE) {
-                    if (mFab.isSelected()) {
-                        ArcLayoutUtils.toggleArcLayout(mFab, mMenuLayout, mArcLayout);
+                    if (mMenuLayout.getVisibility() != View.INVISIBLE) {
+                        if (mFab.isSelected()) {
+                            ArcLayoutUtils.toggleArcLayout(mFab, mMenuLayout, mArcLayout);
+                        }
                     }
+                    return false;
                 }
-                return false;
-            }
         );
     }
 
-    private void showReadFragments() {
-        mGalleryIndex = mViewPager.getCurrentItem();
+    private void showGankFragments() {
+        mAdapter.addFragments(
+                getString(R.string.fragment_title_gank),
+                getString(R.string.fragment_title_fuli));
+        mAdapter.notifyDataSetChanged();
+        mViewPager.setCurrentItem(mIndexes[INDEX_GANK]);
+    }
 
+    private void showReadFragments() {
         mAdapter.addFragments(
                 getString(R.string.fragment_title_zhihu),
-                getString(R.string.fragment_title_blog),
                 getString(R.string.fragment_title_tech),
-                getString(R.string.fragment_title_gank),
+                getString(R.string.fragment_title_blog),
                 getString(R.string.fragment_title_android));
         mAdapter.notifyDataSetChanged();
-        mViewPager.setCurrentItem(mReadIndex);
+        mViewPager.setCurrentItem(mIndexes[INDEX_READ]);
     }
 
     private void showGalleryFragments() {
-        mReadIndex = mViewPager.getCurrentItem();
-
         if (mBucketPrefixes != null) {
             if (CacheManager.contains(Constants.PREF_KEY_FULI)
                     && !mBucketPrefixes.contains(Constants.PREF_KEY_FULI)) {
@@ -219,7 +247,7 @@ public class HomeActivity extends BaseActivity {
             }
             mAdapter.addFragments(mBucketPrefixes.toArray(new String[0]));
             mAdapter.notifyDataSetChanged();
-            mViewPager.setCurrentItem(mGalleryIndex);
+            mViewPager.setCurrentItem(mIndexes[INDEX_GALLERY]);
         } else {
             QiniuUtils.parseBucketPrefixes()
                     .subscribeOn(Schedulers.io())
@@ -228,7 +256,7 @@ public class HomeActivity extends BaseActivity {
                         mBucketPrefixes = bucketPrefixes;
                         mAdapter.addFragments(mBucketPrefixes.toArray(new String[0]));
                         mAdapter.notifyDataSetChanged();
-                        mViewPager.setCurrentItem(mGalleryIndex);
+                        mViewPager.setCurrentItem(mIndexes[INDEX_GALLERY]);
                     });
         }
     }

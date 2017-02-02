@@ -11,6 +11,7 @@
     <string name="nav_author">Elixon</string>
     <string name="nav_author_desc">https://baoxiehao.github.com</string>
 
+    <string name="nav_menu_gank">GANK</string>
     <string name="nav_menu_read">READ</string>
     <string name="nav_menu_gallery">GALLERY</string>
     <string name="nav_menu_share">Share</string>

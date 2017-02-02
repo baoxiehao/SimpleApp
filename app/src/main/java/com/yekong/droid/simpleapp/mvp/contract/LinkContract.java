@@ -3,12 +3,10 @@ package com.yekong.droid.simpleapp.mvp.contract;
 import com.yekong.droid.simpleapp.model.LinkItem;
 import com.yekong.droid.simpleapp.mvp.presenter.BasePagePresenter;
 import com.yekong.droid.simpleapp.mvp.view.BaseView;
-import com.yekong.droid.simpleapp.util.DateUtils;
 import com.yekong.droid.simpleapp.util.Logger;
 import com.yekong.droid.simpleapp.util.WebUtils;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import rx.Observable;
@@ -112,30 +110,20 @@ public interface LinkContract {
 
     final class AndroidPresenter extends BasePagePresenter<View, LinkItem> {
 
-        private static final String ANDROID_WEEEKLY_URL_FORMAT = "http://www.androidweekly.cn/android-dev-weekly-issue-%s/";
-        private static final String ANDROID_DEV_URL_FORMAT = "https://www.androiddevdigest.com/digest-%s/";
+        private static final String ANDROID_WEEEKLY_URL = "http://www.androidweekly.cn";
+        private static final String ANDROID_DEV_URL = "https://www.androiddevdigest.com";
 
-        private static final int ANDROID_WEEKLY_BASE_PAGE = 111;
-        private static final int ANDROID_DEV_BASE_PAGE = 124;
-
-        private static final Calendar ANDROID_WEEKLY_BASE_DATE = DateUtils.getCalendar(2017, 1, 3);
-        private static final Calendar ANDROID_DEV_BASE_DATE = DateUtils.getCalendar(2017, 1, 3);
+        private static final String ANDROID_WEEKLY_PATH = "android-dev-weekly-issue-";
+        private static final String ANDROID_DEV_PATH = "digest-";
 
         private int mAndroidWeeklyPage;
         private int mAndroidDevPage;
-
-        public static int getLatestPage(final int basePage, final Calendar baseDate) {
-            return basePage + DateUtils.getDayOffset(Calendar.getInstance(), baseDate) / 7;
-        }
 
         @Override
         public boolean onRefreshData() {
             super.onRefreshData();
 
-            mAndroidWeeklyPage = getLatestPage(ANDROID_WEEKLY_BASE_PAGE, ANDROID_WEEKLY_BASE_DATE);
-            mAndroidDevPage = getLatestPage(ANDROID_DEV_BASE_PAGE, ANDROID_DEV_BASE_DATE);
-            super.updatePageKey(getPageKey(mAndroidWeeklyPage, mAndroidDevPage), false);
-            loadAndroidPage();
+            parseLatestPages();
             return true;
         }
 
@@ -150,15 +138,45 @@ public interface LinkContract {
             return true;
         }
 
+        private int parsePageFromLink(String path, List<LinkItem> linkItems) {
+            final String href = linkItems.get(0).url;
+            final int fromIndex = href.indexOf(path) + path.length();
+            final int toIndex = href.indexOf("/", fromIndex);
+            final int page = Integer.valueOf(href.substring(fromIndex, toIndex));
+            Logger.d("parsePageFromLink(): href = %s, page = %s", href, page);
+            return page;
+        }
+
+        private void parseLatestPages() {
+            Observable.zip(
+                    WebUtils.parseLinks(ANDROID_WEEEKLY_URL,
+                            String.format("a[href*=%s]", ANDROID_WEEKLY_PATH)),
+                    WebUtils.parseLinks(ANDROID_DEV_URL,
+                            String.format("a[href*=%s]", ANDROID_DEV_PATH)),
+                    (linkItems1, linkItems2) -> {
+                        mAndroidWeeklyPage = parsePageFromLink(ANDROID_WEEKLY_PATH, linkItems1);
+                        mAndroidDevPage = parsePageFromLink(ANDROID_DEV_PATH, linkItems2);
+                        Logger.d("parseLatestPages(): weeklyPage = %s, devPage = %s", mAndroidWeeklyPage, mAndroidDevPage);
+                        return new ArrayList<LinkItem>();
+                    })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(rssItems -> {
+                                super.updatePageKey(getPageKey(mAndroidWeeklyPage, mAndroidDevPage), false);
+                                loadAndroidPage();
+                            },
+                            error -> onPageError(error));
+        }
+
         private void loadAndroidPage() {
             final String pageKey = getPageKey(mAndroidWeeklyPage, mAndroidDevPage);
 
             Observable.zip(
                     WebUtils.parseLinks(
-                            String.format(ANDROID_WEEEKLY_URL_FORMAT, mAndroidWeeklyPage),
+                            String.format("%s/%s%d", ANDROID_WEEEKLY_URL, ANDROID_WEEKLY_PATH, mAndroidWeeklyPage),
                             "li > p > a[href]"),
                     WebUtils.parseLinks(
-                            String.format(ANDROID_DEV_URL_FORMAT, mAndroidDevPage),
+                            String.format("%s/%s%d", ANDROID_DEV_URL, ANDROID_DEV_PATH, mAndroidDevPage),
                             "p > a[href]"),
                     (rssItems1, rssItems2) -> {
                         List<LinkItem> linkItems = new ArrayList<>();

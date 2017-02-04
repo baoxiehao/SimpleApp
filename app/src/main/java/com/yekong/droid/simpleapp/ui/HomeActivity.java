@@ -65,10 +65,11 @@ public class HomeActivity extends BaseActivity {
     @BindView(R.id.arc_layout)
     ArcLayout mArcLayout;
 
-    final static int NAV_COUNT = 3;
-    final static int INDEX_GANK = 0;
-    final static int INDEX_READ = 1;
-    final static int INDEX_GALLERY = 2;
+    final static int NAV_COUNT = 4;
+    final static int INDEX_INFO = 0;
+    final static int INDEX_PICS = 1;
+    final static int INDEX_CODE = 2;
+    final static int INDEX_GANK = 3;
 
     int[] mIndexes = new int[NAV_COUNT];
     List<String> mBucketPrefixes;
@@ -139,12 +140,14 @@ public class HomeActivity extends BaseActivity {
             // Handle navigation view item clicks here.
             int id = item.getItemId();
 
-            if (id == R.id.nav_gank) {
-                mBottomNavView.selectTab(INDEX_GANK);
-            } else if (id == R.id.nav_read) {
-                mBottomNavView.selectTab(INDEX_READ);
+            if (id == R.id.nav_info) {
+                mBottomNavView.selectTab(INDEX_INFO);
             } else if (id == R.id.nav_pics) {
-                mBottomNavView.selectTab(INDEX_GALLERY);
+                mBottomNavView.selectTab(INDEX_PICS);
+            } else if (id == R.id.nav_code) {
+                mBottomNavView.selectTab(INDEX_CODE);
+            } else if (id == R.id.nav_gank) {
+                mBottomNavView.selectTab(INDEX_GANK);
             } else if (id == R.id.nav_share) {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
@@ -178,35 +181,42 @@ public class HomeActivity extends BaseActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
-        showReadFragments();
+        showInfoFragments();
     }
 
     private void initBottomNavView() {
         mBottomNavView.addTab(new BottomNavigationItem(
-                getString(R.string.nav_menu_gank),
+                getString(R.string.nav_menu_info),
                 getResources().getColor(R.color.primary),
-                R.drawable.ic_nav_bottom_news)
+                R.drawable.ic_nav_bottom_info)
         );
         mBottomNavView.addTab(new BottomNavigationItem(
-                getString(R.string.nav_menu_read),
-                getResources().getColor(R.color.primary),
-                R.drawable.ic_nav_bottom_news)
-        );
-        mBottomNavView.addTab(new BottomNavigationItem(
-                getString(R.string.nav_menu_gallery),
+                getString(R.string.nav_menu_pics),
                 getResources().getColor(R.color.primary),
                 R.drawable.ic_nav_bottom_pics)
         );
+        mBottomNavView.addTab(new BottomNavigationItem(
+                getString(R.string.nav_menu_code),
+                getResources().getColor(R.color.primary),
+                R.drawable.ic_nav_bottom_code)
+        );
+        mBottomNavView.addTab(new BottomNavigationItem(
+                getString(R.string.nav_menu_gank),
+                getResources().getColor(R.color.primary),
+                R.drawable.ic_nav_bottom_gank)
+        );
         mBottomNavView.setOnBottomNavigationItemClickListener((index) -> {
-            if (index == INDEX_GANK) {
+            if (index == INDEX_INFO) {
+                showInfoFragments();
+            } else if (index == INDEX_PICS) {
+                showPicsFragments();
+            } else if (index == INDEX_CODE) {
+                showCodeFragments();
+            } else if (index == INDEX_GANK) {
                 showGankFragments();
-            } else if (index == INDEX_READ) {
-                showReadFragments();
-            } else {
-                showGalleryFragments();
             }
         });
-        mBottomNavView.selectTab(INDEX_READ);
+        mBottomNavView.selectTab(INDEX_INFO);
     }
 
     private void initArcLayout() {
@@ -221,25 +231,17 @@ public class HomeActivity extends BaseActivity {
         );
     }
 
-    private void showGankFragments() {
-        mAdapter.addFragments(
-                getString(R.string.fragment_title_gank),
-                getString(R.string.fragment_title_fuli));
-        mAdapter.notifyDataSetChanged();
-        mViewPager.setCurrentItem(mIndexes[INDEX_GANK]);
-    }
-
-    private void showReadFragments() {
+    private void showInfoFragments() {
         mAdapter.addFragments(
                 getString(R.string.fragment_title_zhihu),
                 getString(R.string.fragment_title_tech),
                 getString(R.string.fragment_title_blog),
                 getString(R.string.fragment_title_android));
         mAdapter.notifyDataSetChanged();
-        mViewPager.setCurrentItem(mIndexes[INDEX_READ]);
+        mViewPager.setCurrentItem(mIndexes[INDEX_INFO]);
     }
 
-    private void showGalleryFragments() {
+    private void showPicsFragments() {
         if (mBucketPrefixes != null) {
             if (CacheManager.contains(Constants.PREF_KEY_FULI)
                     && !mBucketPrefixes.contains(Constants.PREF_KEY_FULI)) {
@@ -247,7 +249,7 @@ public class HomeActivity extends BaseActivity {
             }
             mAdapter.addFragments(mBucketPrefixes.toArray(new String[0]));
             mAdapter.notifyDataSetChanged();
-            mViewPager.setCurrentItem(mIndexes[INDEX_GALLERY]);
+            mViewPager.setCurrentItem(mIndexes[INDEX_PICS]);
         } else {
             QiniuUtils.parseBucketPrefixes()
                     .subscribeOn(Schedulers.io())
@@ -256,9 +258,28 @@ public class HomeActivity extends BaseActivity {
                         mBucketPrefixes = bucketPrefixes;
                         mAdapter.addFragments(mBucketPrefixes.toArray(new String[0]));
                         mAdapter.notifyDataSetChanged();
-                        mViewPager.setCurrentItem(mIndexes[INDEX_GALLERY]);
+                        mViewPager.setCurrentItem(mIndexes[INDEX_PICS]);
                     });
         }
+    }
+
+    private void showCodeFragments() {
+        mAdapter.addFragments(
+                getString(R.string.fragment_title_diycode_topics),
+                getString(R.string.fragment_title_diycode_projects),
+                getString(R.string.fragment_title_diycode_news),
+                getString(R.string.fragment_title_diycode_github),
+                getString(R.string.fragment_title_diycode_sites));
+        mAdapter.notifyDataSetChanged();
+        mViewPager.setCurrentItem(mIndexes[INDEX_CODE]);
+    }
+
+    private void showGankFragments() {
+        mAdapter.addFragments(
+                getString(R.string.fragment_title_gank),
+                getString(R.string.fragment_title_fuli));
+        mAdapter.notifyDataSetChanged();
+        mViewPager.setCurrentItem(mIndexes[INDEX_GANK]);
     }
 
     @OnClick(R.id.fab)

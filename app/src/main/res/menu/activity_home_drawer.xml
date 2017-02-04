@@ -3,28 +3,32 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_gank"
-            android:icon="@drawable/ic_book_black_24dp"
-            android:title="@string/nav_menu_gank" />
-        <item
-            android:id="@+id/nav_read"
-            android:icon="@drawable/ic_book_black_24dp"
-            android:title="@string/nav_menu_read" />
+            android:id="@+id/nav_info"
+            android:icon="@drawable/ic_nav_menu_info"
+            android:title="@string/nav_menu_info" />
         <item
             android:id="@+id/nav_pics"
-            android:icon="@drawable/ic_image_black_24dp"
-            android:title="@string/nav_menu_gallery" />
+            android:icon="@drawable/ic_nav_menu_pics"
+            android:title="@string/nav_menu_pics" />
+        <item
+            android:id="@+id/nav_code"
+            android:icon="@drawable/ic_nav_menu_code"
+            android:title="@string/nav_menu_code" />
+        <item
+            android:id="@+id/nav_gank"
+            android:icon="@drawable/ic_nav_menu_gank"
+            android:title="@string/nav_menu_gank" />
     </group>
 
     <item android:title="@string/app_name">
         <menu>
             <item
                 android:id="@+id/nav_share"
-                android:icon="@drawable/ic_share_black_24dp"
+                android:icon="@drawable/ic_nav_menu_share"
                 android:title="@string/nav_menu_share" />
             <item
                 android:id="@+id/nav_setting"
-                android:icon="@drawable/ic_settings_applications_black_24dp"
+                android:icon="@drawable/ic_nav_menu_settings"
                 android:title="@string/nav_menu_setting" />
         </menu>
     </item>

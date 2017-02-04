@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.yekong.droid.simpleapp.di.Gank;
 import com.yekong.droid.simpleapp.di.Github;
+import com.yekong.droid.simpleapp.di.Rss;
 import com.yekong.droid.simpleapp.di.ZhiHu;
 
 import java.lang.reflect.Field;
@@ -25,13 +26,6 @@ import rx.schedulers.Schedulers;
  */
 @Module
 public class RetrofitModule {
-    @Provides
-    @Singleton
-    @Github
-    public Retrofit provideGithubRetrofit(@Github Retrofit.Builder builder) {
-        return builder.baseUrl("https://api.github.com/").build();
-    }
-
     @Provides
     @Singleton
     @Gank
@@ -56,6 +50,26 @@ public class RetrofitModule {
                 ))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build();
+    }
+
+    @Provides
+    @Singleton
+    @Rss
+    public Retrofit provideRssRetrofit() {
+        return new Retrofit.Builder()
+                .baseUrl("http://192.168.31.71:4000/")
+                .addConverterFactory(GsonConverterFactory.create(
+                        new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss+08:00").create()
+                ))
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .build();
+    }
+
+    @Provides
+    @Singleton
+    @Github
+    public Retrofit provideGithubRetrofit(@Github Retrofit.Builder builder) {
+        return builder.baseUrl("https://api.github.com/").build();
     }
 
     @Provides

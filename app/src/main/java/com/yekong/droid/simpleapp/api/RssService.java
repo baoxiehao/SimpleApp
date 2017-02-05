@@ -18,8 +18,8 @@ public class RssService {
         mRssApi = rssApi;
     }
 
-    public Observable<List<RssItem>> getRssItems(String path, int page) {
-        Logger.d("getRssItems(): path=%s, page=%s", path, page);
-        return mRssApi.getRssItems(path, page);
+    public Observable<List<RssItem>> getRssItems(String source, String path, int page) {
+        Logger.d("getRssItems(): source=%s, path=%s, page=%s", source, path, page);
+        return mRssApi.getRssItems(source, path, page);
     }
 }

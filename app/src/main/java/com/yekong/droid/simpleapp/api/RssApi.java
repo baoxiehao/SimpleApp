@@ -5,6 +5,7 @@ import com.yekong.droid.simpleapp.model.RssItem;
 import java.util.List;
 
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -13,6 +14,9 @@ import rx.Observable;
  */
 
 public interface RssApi {
-    @GET("api/rss/diycode")
-    Observable<List<RssItem>> getRssItems(@Query("path") String path, @Query("page") int page);
+    @GET("api/rss/{source}")
+    Observable<List<RssItem>> getRssItems(
+            @Path("source") String source,
+            @Query("path") String path,
+            @Query("page") int page);
 }

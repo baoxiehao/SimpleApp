@@ -64,16 +64,16 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="Text.List.Secondary" parent="@style/TextAppearance.AppCompat.Medium">
-        <item name="android:textSize">14sp</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
-    <style name="Text.List.Preview" parent="@style/TextAppearance.AppCompat.Medium">
+    <style name="Text.List.Secondary" parent="@style/TextAppearance.AppCompat.Body1">
         <item name="android:textSize">14sp</item>
         <item name="android:singleLine">false</item>
         <item name="android:maxLines">3</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Text.List.Ternary" parent="@style/TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">14sp</item>
+        <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
     </style>
 

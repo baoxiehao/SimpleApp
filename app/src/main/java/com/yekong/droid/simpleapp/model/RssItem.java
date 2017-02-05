@@ -1,28 +1,23 @@
 package com.yekong.droid.simpleapp.model;
 
+import com.google.gson.Gson;
+
 /**
  * Created by baoxiehao on 17/1/27.
  */
 
 public class RssItem {
+    public static final Gson GSON = new Gson();
+
     public String title;
     public String link;
     public String desc;
     public String image;
     public String time;
-
-    public static RssItem create(String title, String link, String desc, String image, String time) {
-        RssItem rssItem = new RssItem();
-        rssItem.title = title;
-        rssItem.link = link;
-        rssItem.desc = desc;
-        rssItem.image = image;
-        rssItem.time = time;
-        return rssItem;
-    }
+    public String source;
 
     @Override
     public String toString() {
-        return String.format("title=%s, link=%s, desc=%s, image=%s, time=%s", title, link, desc, image, time);
+        return GSON.toJson(this);
     }
 }

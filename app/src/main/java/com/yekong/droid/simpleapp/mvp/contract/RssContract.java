@@ -20,12 +20,47 @@ public interface RssContract {
 
     }
 
-    final class Presenter extends BasePagePresenter<View, RssItem> {
+    final class TechPresenter extends BasePagePresenter<View, RssItem> {
+
+        final static String SOURCE = "";
+        int mPage = 1;
+
+        @Override
+        public boolean onRefreshData() {
+            super.onRefreshData();
+
+            mPage = 1;
+            updatePageKey(getPageKey(mPage), false);
+            loadPage();
+            return true;
+        }
+
+        @Override
+        public boolean onLoadMoreData() {
+            super.onLoadMoreData();
+            return false;
+        }
+
+        private void loadPage() {
+            final String pageKey = getPageKey(mPage);
+
+            SimpleApp.getAppComponent().getRssService()
+                    .getRssItems(SOURCE, "", mPage)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(rssItems -> onPageData(pageKey, rssItems),
+                            error -> onPageError(error));
+        }
+    }
+
+    final class DiyCodePresenter extends BasePagePresenter<View, RssItem> {
+
+        final static String SOURCE = "diycode";
 
         String mPath;
         int mPage = 1;
 
-        public Presenter(String path) {
+        public DiyCodePresenter(String path) {
             mPath = path;
         }
 
@@ -53,7 +88,7 @@ public interface RssContract {
             final String pageKey = getPageKey(mPath, mPage);
 
             SimpleApp.getAppComponent().getRssService()
-                    .getRssItems(mPath, mPage)
+                    .getRssItems(SOURCE, mPath, mPage)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(rssItems -> onPageData(pageKey, rssItems),

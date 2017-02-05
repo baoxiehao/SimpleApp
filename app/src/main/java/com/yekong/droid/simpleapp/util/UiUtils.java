@@ -1,16 +1,19 @@
 package com.yekong.droid.simpleapp.util;
 
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.request.RequestListener;
+import com.yekong.droid.simpleapp.R;
 import com.yekong.droid.simpleapp.app.SimpleApp;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
 import static android.view.View.SYSTEM_UI_FLAG_LOW_PROFILE;
+import static com.bumptech.glide.Priority.priority;
 
 /**
  * Created by baoxiehao on 16/11/29.
@@ -19,6 +22,14 @@ import static android.view.View.SYSTEM_UI_FLAG_LOW_PROFILE;
 public class UiUtils {
 
     public static void loadImage(ImageView imageView, final String imageUrl) {
+        if (TextUtils.isEmpty(imageUrl)) {
+            Glide.with(SimpleApp.getAppComponent().getContext())
+                    .load(R.drawable.ic_startup)
+                    .thumbnail(0.25f)
+                    .priority(priority)
+                    .into(imageView);
+            return;
+        }
         loadImage(imageView, imageUrl, Priority.NORMAL);
     }
 
@@ -26,13 +37,18 @@ public class UiUtils {
         Glide.with(SimpleApp.getAppComponent().getContext())
                 .load(Uri.parse(imageUrl))
                 .priority(priority)
-                .into(imageView);    }
+                .fallback(R.drawable.ic_startup)
+                .thumbnail(0.25f)
+                .into(imageView);
+    }
 
     public static void loadImage(ImageView imageView, final String imageUrl, final Priority priority, RequestListener listener) {
         Glide.with(SimpleApp.getAppComponent().getContext())
                 .load(Uri.parse(imageUrl))
                 .listener(listener)
                 .priority(priority)
+                .fallback(R.drawable.ic_startup)
+                .thumbnail(0.25f)
                 .into(imageView);
     }
 

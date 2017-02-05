@@ -1,45 +1,29 @@
 package com.yekong.droid.simpleapp.ui;
 
-import com.chad.library.adapter.base.BaseViewHolder;
-import com.yekong.droid.simpleapp.R;
-import com.yekong.droid.simpleapp.model.LinkItem;
+import com.yekong.droid.simpleapp.model.RssItem;
 import com.yekong.droid.simpleapp.mvp.common.UserCase;
-import com.yekong.droid.simpleapp.mvp.contract.LinkContract;
+import com.yekong.droid.simpleapp.mvp.contract.RssContract;
+import com.yekong.droid.simpleapp.ui.adapter.RssAdapter;
 import com.yekong.droid.simpleapp.ui.base.BaseAdapter;
 import com.yekong.droid.simpleapp.ui.base.RecyclerPageFragment;
-
-import java.util.List;
 
 /**
  * Created by baoxiehao on 16/11/28.
  */
 
 public class TechFragment extends RecyclerPageFragment<
-        LinkItem, LinkContract.View, LinkContract.TechPresenter>
-        implements LinkContract.View {
+        RssItem, RssContract.View, RssContract.TechPresenter>
+        implements RssContract.View {
 
     @Override
-    public LinkContract.TechPresenter createPresenter() {
-        return new LinkContract.TechPresenter();
+    public RssContract.TechPresenter createPresenter() {
+        return new RssContract.TechPresenter();
     }
 
     @Override
     protected BaseAdapter setupAdapter() {
-        ListAdapter adapter = new ListAdapter(mData);
-        adapter.setOnRecyclerViewItemClickListener((view, pos) -> UserCase.showWebView(mData.get(pos).url));
+        BaseAdapter adapter = new RssAdapter(mData);
+        adapter.setOnRecyclerViewItemClickListener((view, pos) -> UserCase.showWebView(mData.get(pos).link));
         return adapter;
-    }
-
-    class ListAdapter extends BaseAdapter<LinkItem> {
-
-        public ListAdapter(List<LinkItem> data) {
-            super(R.layout.item_text_2, data);
-        }
-
-        @Override
-        protected void convert(BaseViewHolder baseViewHolder, LinkItem linkItem) {
-            baseViewHolder.setText(R.id.primaryText, linkItem.title);
-            baseViewHolder.setText(R.id.secondaryText, linkItem.source);
-        }
     }
 }

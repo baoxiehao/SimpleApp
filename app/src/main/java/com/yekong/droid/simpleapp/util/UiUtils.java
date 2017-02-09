@@ -38,7 +38,6 @@ public class UiUtils {
                 .load(Uri.parse(imageUrl))
                 .priority(priority)
                 .fallback(R.drawable.ic_startup)
-                .thumbnail(0.25f)
                 .into(imageView);
     }
 
@@ -48,7 +47,6 @@ public class UiUtils {
                 .listener(listener)
                 .priority(priority)
                 .fallback(R.drawable.ic_startup)
-                .thumbnail(0.25f)
                 .into(imageView);
     }
 

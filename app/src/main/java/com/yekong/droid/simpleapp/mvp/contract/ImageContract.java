@@ -16,8 +16,9 @@ import com.yekong.droid.simpleapp.util.QiniuUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by baoxiehao on 17/1/25.

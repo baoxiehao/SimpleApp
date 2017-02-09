@@ -1,6 +1,6 @@
 package com.yekong.droid.simpleapp.mvp.view;
 
-import com.hannesdorfmann.mosby.mvp.lce.MvpLceView;
+import com.hannesdorfmann.mosby3.mvp.lce.MvpLceView;
 
 /**
  * Created by baoxiehao on 16/11/28.

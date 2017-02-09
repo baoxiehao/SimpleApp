@@ -7,8 +7,9 @@ import com.yekong.droid.simpleapp.mvp.view.BaseView;
 
 import java.util.List;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by baoxiehao on 17/2/4.

@@ -4,10 +4,10 @@ import com.yekong.droid.simpleapp.model.GithubRepo;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import rx.Observable;
 
 /**
  * Created by baoxiehao on 16/11/26.

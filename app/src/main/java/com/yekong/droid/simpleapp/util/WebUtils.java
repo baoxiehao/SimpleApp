@@ -28,7 +28,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * Created by baoxiehao on 17/1/25.
@@ -100,7 +100,7 @@ public class WebUtils {
                     linkItems.add(linkItem);
                 }
                 subscriber.onNext(linkItems);
-                subscriber.onCompleted();
+                subscriber.onComplete();
             } catch (IOException e) {
                 subscriber.onError(e);
             }

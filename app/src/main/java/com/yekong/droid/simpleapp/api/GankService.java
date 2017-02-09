@@ -2,7 +2,8 @@ package com.yekong.droid.simpleapp.api;
 
 import com.yekong.droid.simpleapp.model.Gank;
 
-import rx.Observable;
+import io.reactivex.Observable;
+
 
 /**
  * Created by baoxiehao on 16/11/28.

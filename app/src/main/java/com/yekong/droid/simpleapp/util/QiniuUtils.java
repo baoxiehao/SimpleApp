@@ -22,7 +22,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Observable;
+
 
 /**
  * Created by baoxiehao on 17/1/25.
@@ -61,7 +62,7 @@ public class QiniuUtils {
                 Logger.d("parseBucketPrefix(): prefixes = %s", TextUtils.join(", ", prefixes));
 
                 subscriber.onNext(prefixes);
-                subscriber.onCompleted();
+                subscriber.onComplete();
             } catch (Exception e) {
                 subscriber.onError(e);
                 Logger.e(e.toString(), e);
@@ -102,7 +103,7 @@ public class QiniuUtils {
                 } while (marker != null);
                 subscriber.onNext(markers);
 
-                subscriber.onCompleted();
+                subscriber.onComplete();
             } catch (QiniuException e) {
                 subscriber.onError(e);
                 Logger.e(e.response.toString(), e);
@@ -132,7 +133,7 @@ public class QiniuUtils {
                 }
                 subscriber.onNext(urls);
 
-                subscriber.onCompleted();
+                subscriber.onComplete();
             } catch (QiniuException e) {
                 subscriber.onError(e);
                 Logger.e(e.response.toString(), e);
@@ -161,7 +162,7 @@ public class QiniuUtils {
                 }
 
                 subscriber.onNext(response.isOK());
-                subscriber.onCompleted();
+                subscriber.onComplete();
             } catch (QiniuException e) {
                 subscriber.onError(e);
                 Logger.e(e.response.toString(), e);
@@ -192,7 +193,7 @@ public class QiniuUtils {
 
                     subscriber.onNext(response.isOK());
                 }
-                subscriber.onCompleted();
+                subscriber.onComplete();
             } catch (QiniuException e) {
                 subscriber.onError(e);
                 Logger.e(e.response.toString(), e);

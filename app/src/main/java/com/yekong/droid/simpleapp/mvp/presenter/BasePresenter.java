@@ -1,6 +1,6 @@
 package com.yekong.droid.simpleapp.mvp.presenter;
 
-import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
+import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 import com.yekong.droid.simpleapp.mvp.view.BaseView;
 
 /**

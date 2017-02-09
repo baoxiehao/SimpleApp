@@ -4,6 +4,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.yekong.droid.simpleapp.di.Gank;
 import com.yekong.droid.simpleapp.di.Github;
 import com.yekong.droid.simpleapp.di.Rss;
@@ -15,11 +16,10 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by baoxiehao on 16/11/26.
@@ -35,7 +35,7 @@ public class RetrofitModule {
                 .addConverterFactory(GsonConverterFactory.create(
                         new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create()
                 ))
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build();
     }
 
@@ -48,7 +48,7 @@ public class RetrofitModule {
                 .addConverterFactory(GsonConverterFactory.create(
                         new GsonBuilder().setDateFormat("yyyyMMdd").create()
                 ))
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build();
     }
 
@@ -61,7 +61,7 @@ public class RetrofitModule {
                 .addConverterFactory(GsonConverterFactory.create(
                         new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss+08:00").create()
                 ))
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build();
     }
 
@@ -77,7 +77,7 @@ public class RetrofitModule {
     @Github
     public Retrofit.Builder provideGithubRetrofitBuilder(@Github Converter.Factory converterFactory) {
         return new Retrofit.Builder()
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .addConverterFactory(converterFactory);
     }
 

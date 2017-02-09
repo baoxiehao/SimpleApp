@@ -34,8 +34,8 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class HomeActivity extends BaseActivity {
 
@@ -111,7 +111,7 @@ public class HomeActivity extends BaseActivity {
                 RxView.clicks(navImageView)
                         .buffer(1, TimeUnit.SECONDS)
                         .filter(clicks -> clicks.size() > 0)
-                        .observeOn(AndroidSchedulers.mainThread())
+                        .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
                         .subscribe(clicks -> {
                             Logger.d("Fuli clicks: %s", clicks.size());
                             if (clicks.size() >= 5) {

@@ -4,7 +4,7 @@ import com.yekong.droid.simpleapp.model.GithubRepo;
 
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * Created by baoxiehao on 16/11/26.

@@ -13,8 +13,9 @@ import com.yekong.droid.simpleapp.util.Toaster;
 
 import java.util.ArrayList;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by baoxiehao on 17/2/1.

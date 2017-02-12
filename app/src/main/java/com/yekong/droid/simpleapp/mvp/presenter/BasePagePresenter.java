@@ -2,7 +2,6 @@ package com.yekong.droid.simpleapp.mvp.presenter;
 
 import com.yekong.droid.simpleapp.mvp.view.BaseView;
 import com.yekong.droid.simpleapp.util.Logger;
-import com.yekong.droid.simpleapp.util.Toaster;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,6 +63,19 @@ public abstract class BasePagePresenter<V extends BaseView, M> extends BasePrese
         return false;
     }
 
+    public int onPageScrolled(int lastPosition) {
+        int currentPage = 1;
+        if (mPages.size() >= 2) {
+            int pagePosition = mPageDataMap.get(mPages.get(currentPage - 1)).size();
+            while (lastPosition > pagePosition) {
+                currentPage++;
+                pagePosition += mPageDataMap.get(mPages.get(currentPage - 1)).size();
+            }
+        }
+        Logger.d("onPageScrolled(): lastPosition=%s, page=%s", lastPosition, currentPage);
+        return currentPage;
+    }
+
     protected void onPageData(String page, List<M> data) {
         Logger.d("onPageData(): tag=%s, page=%s, count=%s", tag(), page, data.size());
         mPageDataMap.put(page, data);
@@ -93,7 +105,6 @@ public abstract class BasePagePresenter<V extends BaseView, M> extends BasePrese
             if (!mData.isEmpty()) {
                 view.setData(mData);
             } else {
-                Toaster.quick(throwable.toString());
                 view.showError(throwable, false);
             }
         }

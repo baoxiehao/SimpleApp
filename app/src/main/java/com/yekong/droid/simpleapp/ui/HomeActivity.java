@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.jakewharton.rxbinding.view.RxView;
@@ -220,6 +221,19 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void initArcLayout() {
+        mFab.setOnTouchListener((view, motionEvent) -> {
+            if (MotionEvent.ACTION_DOWN == motionEvent.getAction()) {
+                if (mBottomNavView.getTranslationY() > 0) {
+                    // If untouchable, return false to not to consume the following motion events
+                    Logger.d("Fab is untouchable!");
+                    return false;
+                }
+                return true;
+            } else if (MotionEvent.ACTION_UP == motionEvent.getAction()) {
+                ArcLayoutUtils.toggleArcLayout(mFab, mMenuLayout, mArcLayout);
+            }
+            return false;
+        });
         mMenuLayout.setOnTouchListener((view, motionEvent) -> {
                     if (mMenuLayout.getVisibility() != View.INVISIBLE) {
                         if (mFab.isSelected()) {
@@ -280,13 +294,6 @@ public class HomeActivity extends BaseActivity {
                 getString(R.string.fragment_title_fuli));
         mAdapter.notifyDataSetChanged();
         mViewPager.setCurrentItem(mIndexes[INDEX_GANK]);
-    }
-
-    @OnClick(R.id.fab)
-    void onFabClick() {
-        ArcLayoutUtils.toggleArcLayout(mFab, mMenuLayout, mArcLayout);
-//        Snackbar.make(mFab, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", view -> Toaster.quick("Action done")).show();
     }
 
     @OnClick(R.id.fab_up)

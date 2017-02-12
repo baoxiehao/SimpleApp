@@ -120,6 +120,23 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<List<M>>, P ext
                 }
             }
         });
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (RecyclerView.SCROLL_STATE_IDLE == newState) {
+                    RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
+                    if (layoutManager instanceof LinearLayoutManager) {
+                        final int lastPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+                        presenter.onPageScrolled(lastPosition + 1);
+                    } else if (layoutManager instanceof GridLayoutManager) {
+                        final int lastPosition = ((GridLayoutManager) layoutManager).findLastVisibleItemPosition();
+                        presenter.onPageScrolled(2 * (lastPosition + 1));
+                    }
+                }
+            }
+        });
     }
 
     @Override

@@ -52,14 +52,14 @@ public class ShareActivity extends BaseActivity {
     private void handleSendImage(Intent intent) {
         Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (imageUri != null) {
-            QiniuUtils.uploadBucketFile(imageUri)
+            addDisposable(QiniuUtils.uploadBucketFile(imageUri)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(success -> {
                         Logger.d("handleSendImage(): uri = %s, success = %s", imageUri, success);
                         Toaster.quick("Share %s!", success ? "successful" : "failed");
                         finish();
-                    });
+                    }));
         }
     }
 
@@ -93,14 +93,14 @@ public class ShareActivity extends BaseActivity {
         String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
         if (sharedText != null) {
             final Uri imageUri = Uri.parse(sharedText);
-            QiniuUtils.uploadBucketFile(imageUri)
+            addDisposable(QiniuUtils.uploadBucketFile(imageUri)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(success -> {
                         Logger.d("handleSendText(): uri = %s, success = %s", imageUri, success);
                         Toaster.quick("Share %s!", success ? "successful" : "failed");
                         finish();
-                    });
+                    }));
         }
     }
 }

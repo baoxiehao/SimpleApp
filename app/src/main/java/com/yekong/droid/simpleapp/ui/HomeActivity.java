@@ -109,7 +109,7 @@ public class HomeActivity extends BaseActivity {
         mDrawerLayout.addOnLayoutChangeListener((view, i, i1, i2, i3, i4, i5, i6, i7) -> {
             View navImageView = mNavView.findViewById(R.id.navImageView);
             if (navImageView != null) {
-                RxView.clicks(navImageView)
+                addSubscription(RxView.clicks(navImageView)
                         .buffer(1, TimeUnit.SECONDS)
                         .filter(clicks -> clicks.size() > 0)
                         .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
@@ -123,7 +123,7 @@ public class HomeActivity extends BaseActivity {
                                     CacheManager.put(Constants.PREF_KEY_FULI, true);
                                 }
                             }
-                        });
+                        }));
             }
 
             View navAuthorContainer = mNavView.findViewById(R.id.nav_author_container);
@@ -265,7 +265,7 @@ public class HomeActivity extends BaseActivity {
             mAdapter.notifyDataSetChanged();
             mViewPager.setCurrentItem(mIndexes[INDEX_PICS]);
         } else {
-            QiniuUtils.parseBucketPrefixes()
+            addDisposable(QiniuUtils.parseBucketPrefixes()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(bucketPrefixes -> {
@@ -273,7 +273,7 @@ public class HomeActivity extends BaseActivity {
                         mAdapter.addFragments(mBucketPrefixes.toArray(new String[0]));
                         mAdapter.notifyDataSetChanged();
                         mViewPager.setCurrentItem(mIndexes[INDEX_PICS]);
-                    });
+                    }));
         }
     }
 

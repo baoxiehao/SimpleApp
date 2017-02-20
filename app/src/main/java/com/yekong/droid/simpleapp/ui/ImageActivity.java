@@ -131,10 +131,10 @@ public class ImageActivity extends BaseActivity {
         // while interacting with the UI.
         mSaveImageButton.setOnTouchListener(mDelayHideTouchListener);
 
-        RxView.clicks(mSaveImageButton)
+        addSubscription(RxView.clicks(mSaveImageButton)
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(Void -> downloadImage(mUrls.get(mRecyclerViewPager.getCurrentPosition())));
+                .subscribe(Void -> downloadImage(mUrls.get(mRecyclerViewPager.getCurrentPosition()))));
     }
 
     @Override
@@ -221,10 +221,10 @@ public class ImageActivity extends BaseActivity {
                     });
 
             // Set up the user interaction to manually show or hide the system UI.
-            RxView.clicks(imageView)
+            addSubscription(RxView.clicks(imageView)
                     .throttleFirst(1, TimeUnit.SECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(Void -> toggle());
+                    .subscribe(Void -> toggle()));
         }
     }
 

@@ -78,6 +78,37 @@ public class QiniuUtils {
         });
     }
 
+    public static Observable<String> fetchBucketFile(final String bucketKey) {
+
+        return Observable.create(subscriber -> {
+            BufferedReader bufferedReader = null;
+            try {
+                StringBuilder sb = new StringBuilder();
+                URL prefixFileUrl = new URL(String.format("%s/%s", BUCKET_DOMAIN, bucketKey));
+                bufferedReader = new BufferedReader(new InputStreamReader(prefixFileUrl.openStream()));
+                String inputLine;
+                while ((inputLine = bufferedReader.readLine()) != null) {
+                    sb.append(inputLine);
+                }
+                Logger.d("fetchBucketFile(): content = %s", sb.toString());
+
+                subscriber.onNext(sb.toString());
+                subscriber.onComplete();
+            } catch (Exception e) {
+                subscriber.onError(e);
+                Logger.e(e.toString(), e);
+            } finally {
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
     public static Observable<List<String>> parseBucketMarkers(final String baseMarker, final String prefix) {
 
         return Observable.create(subscriber -> {

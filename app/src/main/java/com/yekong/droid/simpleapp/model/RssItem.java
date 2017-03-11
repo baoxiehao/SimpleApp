@@ -1,6 +1,9 @@
 package com.yekong.droid.simpleapp.model;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.List;
 
 /**
  * Created by baoxiehao on 17/1/27.
@@ -19,5 +22,9 @@ public class RssItem {
     @Override
     public String toString() {
         return GSON.toJson(this);
+    }
+
+    public static List<RssItem> fromString(final String json) {
+        return GSON.fromJson(json, new TypeToken<List<RssItem>>() {}.getType());
     }
 }

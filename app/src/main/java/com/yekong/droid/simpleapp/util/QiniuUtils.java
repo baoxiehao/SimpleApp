@@ -21,6 +21,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.reactivex.Observable;
 
@@ -31,9 +33,9 @@ import io.reactivex.Observable;
 
 public class QiniuUtils {
 
-    public static final String PREFIX_SHARE = "发现";
-
     public static final int LIMIT = 30;
+
+    public static final String IMAGE_PREFIX_AFTER = "IMG_";
 
     private static final String ACCESS_KEY = "VVWBCG4yu-Gc4U8d5tld2b8qreFK_eroJHRVSTCd";
     private static final String SECRET_KEY = "xrOO_itzG2cl8DOGYbdzM7Qbv9vvmFl7PEfYBuOx";
@@ -41,7 +43,7 @@ public class QiniuUtils {
     private static final String BUCKET_NAME = "elixon-image";
     private static final String BUCKET_DOMAIN = "http://okd9fys0f.bkt.clouddn.com";
 
-    private static final String BUCKET_PREFIX_KEY = "prefix";
+    private static final String BUCKET_PREFIX_KEY = "prefix-images";
 
     private QiniuUtils() {
     }
@@ -172,7 +174,7 @@ public class QiniuUtils {
         });
     }
 
-    public static Observable<Boolean> uploadBucketFile(Uri uri) {
+    public static Observable<Boolean> uploadBucketFile(String prefix, Uri uri) {
 
         return Observable.create(subscriber -> {
             Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);
@@ -181,7 +183,7 @@ public class QiniuUtils {
             UploadManager uploadManager = new UploadManager(conf);
 
             File file = WebUtils.uriToFile(uri);
-            String key = getUploadKey(file);
+            String key = getUploadKey(prefix, file);
             try {
                 String uploadToken = auth.uploadToken(BUCKET_NAME, key);
                 Response response = uploadManager.put(file, key, uploadToken);
@@ -201,7 +203,7 @@ public class QiniuUtils {
         });
     }
 
-    public static Observable<Boolean> uploadBucketFiles(List<Uri> uris) {
+    public static Observable<Boolean> uploadBucketFiles(String prefix, List<Uri> uris) {
 
         return Observable.create(subscriber -> {
             Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);
@@ -212,7 +214,7 @@ public class QiniuUtils {
                 for (Uri uri : uris) {
                     final File file = WebUtils.uriToFile(uri);
 
-                    final String key = getUploadKey(file);
+                    final String key = getUploadKey(prefix, file);
                     String uploadToken = auth.uploadToken(BUCKET_NAME, key);
                     Response response = uploadManager.put(file, key, uploadToken);
                     Logger.d("uploadBucketFiles(): key = %s, response = %s", key, response.toString());
@@ -232,7 +234,19 @@ public class QiniuUtils {
         });
     }
 
-    private static String getUploadKey(File file) {
-        return String.format("%s%s", PREFIX_SHARE, DateUtils.timeToFileName(file.lastModified(), file.getName()));
+    private static String getUploadKey(String prefix, File file) {
+        final String fileName = file.getName();
+        Pattern pattern = Pattern.compile(DateUtils.PATTERN_IMAGE_FILENAME);
+        Matcher matcher = pattern.matcher(fileName);
+        if (matcher.find()) {
+            Logger.d("getUploadKey(): keep original file name");
+            return String.format("%s%s%s", prefix,
+                    fileName.startsWith(IMAGE_PREFIX_AFTER) ? "" : IMAGE_PREFIX_AFTER,
+                    fileName);
+        }
+        Logger.d("getUploadKey(): use modified time as file name");
+        return String.format("%s%s%s", prefix,
+                IMAGE_PREFIX_AFTER,
+                DateUtils.timeToFileName(file.lastModified(), file.getName()));
     }
 }

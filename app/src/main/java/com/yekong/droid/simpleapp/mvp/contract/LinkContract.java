@@ -35,7 +35,6 @@ public interface LinkContract {
             super.onRefreshData();
 
             mPage = 1;
-            super.updatePageKey(getPageKey(mPage), false);
             loadPage();
             return true;
         }
@@ -45,67 +44,19 @@ public interface LinkContract {
             super.onLoadMoreData();
 
             mPage += 1;
-            super.updatePageKey(getPageKey(mPage));
             loadPage();
             return true;
         }
 
         private void loadPage() {
             final String pageKey = getPageKey(mPage);
+            updatePageKey(pageKey, mPage != 1);
 
             WebUtils.parseLinks(String.format(URL_PREFIX, mPage), ".entry-title > a[href]")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(rssItems -> onPageData(pageKey, rssItems),
                             error -> onPageError(error));
-        }
-    }
-
-    final class TechPresenter extends BasePagePresenter<View, LinkItem> {
-
-        private static final String URL_IFANR = "http://www.ifanr.com";
-        private static final String URL_GEEK = "http://www.geekpark.net";
-
-        int mPage = 1;
-
-        @Override
-        public boolean onRefreshData() {
-            super.onRefreshData();
-
-            mPage = 1;
-            super.updatePageKey(getPageKey(mPage), false);
-            loadPage();
-            return true;
-        }
-
-        @Override
-        public boolean onLoadMoreData() {
-            super.onLoadMoreData();
-
-            mPage = 1;
-            super.updatePageKey(getPageKey(mPage));
-            loadPage();
-            return true;
-        }
-
-        private void loadPage() {
-            final String pageKey = getPageKey(mPage);
-
-            Observable.zip(
-                    WebUtils.parseLinks(URL_IFANR, ".article-info > h3 > a[href]"),
-                    WebUtils.parseLinks(URL_GEEK, "a[href].article-title"),
-                    (rssItems1, rssItems2) -> {
-                        List<LinkItem> linkItems = new ArrayList<>();
-                        linkItems.addAll(rssItems1);
-                        linkItems.addAll(rssItems2);
-                        Logger.d("zip %s %s", rssItems1.size(), rssItems2.size());
-                        return linkItems;
-                    })
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(rssItems -> onPageData(pageKey, rssItems),
-                            error -> onPageError(error));
-
         }
     }
 

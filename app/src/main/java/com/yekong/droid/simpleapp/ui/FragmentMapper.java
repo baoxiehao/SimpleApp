@@ -42,7 +42,11 @@ public class FragmentMapper {
         } else if (TextUtils.equals(context.getString(R.string.fragment_title_android), title)) {
             fragment = new AndroidFragment();
         } else if (DIY_CODE_TITLE_PATH_MAPPING.keySet().contains(title)) {
-            fragment = new DiyCodeFragmentBuilder(DIY_CODE_TITLE_PATH_MAPPING.get(title)).build();
+            if (context.getString(R.string.fragment_title_diycode_sites).equals(title)) {
+                fragment = new DiyCodeGridFragmentBuilder(DIY_CODE_TITLE_PATH_MAPPING.get(title)).build();
+            } else {
+                fragment = new DiyCodeFragmentBuilder(DIY_CODE_TITLE_PATH_MAPPING.get(title)).build();
+            }
         } else {
             fragment = new ImageFragmentBuilder(title).build();
         }

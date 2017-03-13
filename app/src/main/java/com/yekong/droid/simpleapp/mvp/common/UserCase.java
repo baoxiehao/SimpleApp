@@ -3,6 +3,7 @@ package com.yekong.droid.simpleapp.mvp.common;
 import android.content.Intent;
 
 import com.thefinestartist.finestwebview.FinestWebView;
+import com.thefinestartist.finestwebview.listeners.WebViewListener;
 import com.yekong.droid.simpleapp.R;
 import com.yekong.droid.simpleapp.app.SimpleApp;
 import com.yekong.droid.simpleapp.ui.ImageActivity;
@@ -34,6 +35,13 @@ public class UserCase {
                 .stringResOpenWith(R.string.web_open_with)
                 .setCustomAnimations(R.anim.activity_open_enter, R.anim.activity_open_exit,
                         R.anim.activity_close_enter, R.anim.activity_close_exit)
+                .webViewAppCacheEnabled(true)
+                .addWebViewListener(new WebViewListener() {
+                    @Override
+                    public void onPageStarted(String url) {
+                        super.onPageStarted(url);
+                    }
+                })
                 .show(url);
     }
 }

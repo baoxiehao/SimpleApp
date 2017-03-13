@@ -68,9 +68,9 @@ public class HomeActivity extends BaseActivity {
 
     final static int NAV_COUNT = 4;
     final static int INDEX_INFO = 0;
-    final static int INDEX_PICS = 1;
-    final static int INDEX_CODE = 2;
-    final static int INDEX_GANK = 3;
+    final static int INDEX_CODE = 1;
+    final static int INDEX_GANK = 2;
+    final static int INDEX_PICS = 3;
 
     int[] mIndexes = new int[NAV_COUNT];
     List<String> mBucketPrefixes;
@@ -114,12 +114,18 @@ public class HomeActivity extends BaseActivity {
                         .filter(clicks -> clicks.size() > 0)
                         .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread())
                         .subscribe(clicks -> {
-                            Logger.d("Fuli clicks: %s", clicks.size());
                             if (clicks.size() >= 5) {
                                 if (CacheManager.contains(Constants.PREF_KEY_FULI)) {
-                                    Toaster.quick("Fuli has been opened!");
+                                    Boolean containsFuli = CacheManager.get(Constants.PREF_KEY_FULI);
+                                    if (containsFuli) {
+                                        Toaster.quick(getString(R.string.toast_fuli_turned_off));
+                                        CacheManager.put(Constants.PREF_KEY_FULI, false);
+                                    } else {
+                                        Toaster.quick(getString(R.string.toast_fuli_turned_on));
+                                        CacheManager.put(Constants.PREF_KEY_FULI, true);
+                                    }
                                 } else {
-                                    Toaster.quick("Fuli will be shown!");
+                                    Toaster.quick(getString(R.string.toast_fuli_turned_on));
                                     CacheManager.put(Constants.PREF_KEY_FULI, true);
                                 }
                             }
@@ -152,9 +158,9 @@ public class HomeActivity extends BaseActivity {
             } else if (id == R.id.nav_share) {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT, Constants.URL_APP_SHARE);
+                intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.url_app_download));
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(Intent.createChooser(intent, Constants.TITLE_APP_SHARE));
+                startActivity(Intent.createChooser(intent, getString(R.string.dialog_title_share_app)));
             } else if (id == R.id.nav_setting) {
             }
 
@@ -192,11 +198,6 @@ public class HomeActivity extends BaseActivity {
                 R.drawable.ic_nav_bottom_info)
         );
         mBottomNavView.addTab(new BottomNavigationItem(
-                getString(R.string.nav_menu_pics),
-                getResources().getColor(R.color.primary),
-                R.drawable.ic_nav_bottom_pics)
-        );
-        mBottomNavView.addTab(new BottomNavigationItem(
                 getString(R.string.nav_menu_code),
                 getResources().getColor(R.color.primary),
                 R.drawable.ic_nav_bottom_code)
@@ -206,15 +207,20 @@ public class HomeActivity extends BaseActivity {
                 getResources().getColor(R.color.primary),
                 R.drawable.ic_nav_bottom_gank)
         );
+        mBottomNavView.addTab(new BottomNavigationItem(
+                getString(R.string.nav_menu_pics),
+                getResources().getColor(R.color.primary),
+                R.drawable.ic_nav_bottom_pics)
+        );
         mBottomNavView.setOnBottomNavigationItemClickListener((index) -> {
             if (index == INDEX_INFO) {
                 showInfoFragments();
-            } else if (index == INDEX_PICS) {
-                showPicsFragments();
             } else if (index == INDEX_CODE) {
                 showCodeFragments();
             } else if (index == INDEX_GANK) {
                 showGankFragments();
+            } else if (index == INDEX_PICS) {
+                showPicsFragments();
             }
         });
         mBottomNavView.selectTab(INDEX_INFO);
@@ -249,17 +255,23 @@ public class HomeActivity extends BaseActivity {
         mAdapter.addFragments(
                 getString(R.string.fragment_title_zhihu),
                 getString(R.string.fragment_title_tech),
-                getString(R.string.fragment_title_blog),
-                getString(R.string.fragment_title_android));
+                getString(R.string.fragment_title_android),
+                getString(R.string.fragment_title_blog));
         mAdapter.notifyDataSetChanged();
         mViewPager.setCurrentItem(mIndexes[INDEX_INFO]);
     }
 
     private void showPicsFragments() {
         if (mBucketPrefixes != null) {
-            if (CacheManager.contains(Constants.PREF_KEY_FULI)
-                    && !mBucketPrefixes.contains(Constants.PREF_KEY_FULI)) {
-                mBucketPrefixes.add(0, Constants.PREF_KEY_FULI);
+            if (CacheManager.contains(Constants.PREF_KEY_FULI)) {
+                Boolean containsFuli = CacheManager.get(Constants.PREF_KEY_FULI);
+                if (containsFuli) {
+                    if (!mBucketPrefixes.contains(Constants.PREF_KEY_FULI)) {
+                        mBucketPrefixes.add(0, Constants.PREF_KEY_FULI);
+                    }
+                } else {
+                    mBucketPrefixes.remove(Constants.PREF_KEY_FULI);
+                }
             }
             mAdapter.addFragments(mBucketPrefixes.toArray(new String[0]));
             mAdapter.notifyDataSetChanged();

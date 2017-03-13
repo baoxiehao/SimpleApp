@@ -49,8 +49,7 @@ public interface ImageContract {
             super.onRefreshData();
 
             mPage = 1;
-            updatePageKey(getPageKey(mPage));
-            getFuli(mPage);
+            getFuli();
             return true;
         }
 
@@ -59,15 +58,16 @@ public interface ImageContract {
             super.onLoadMoreData();
 
             mPage += 1;
-            updatePageKey(getPageKey(mPage));
-            getFuli(mPage);
+            getFuli();
             return true;
         }
 
-        void getFuli(int page) {
-            final String pageKey = getPageKey(page);
+        void getFuli() {
+            final String pageKey = getPageKey(mPage);
+            updatePageKey(pageKey, mPage != 1);
 
-            SimpleApp.getAppComponent().getGankService().getFuli(GankApi.PAGE_SIZE, page)
+
+            SimpleApp.getAppComponent().getGankService().getFuli(GankApi.PAGE_SIZE, mPage)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .map(response -> {

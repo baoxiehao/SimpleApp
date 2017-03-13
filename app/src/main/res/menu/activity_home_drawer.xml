@@ -7,10 +7,6 @@
             android:icon="@drawable/ic_nav_menu_info"
             android:title="@string/nav_menu_info" />
         <item
-            android:id="@+id/nav_pics"
-            android:icon="@drawable/ic_nav_menu_pics"
-            android:title="@string/nav_menu_pics" />
-        <item
             android:id="@+id/nav_code"
             android:icon="@drawable/ic_nav_menu_code"
             android:title="@string/nav_menu_code" />
@@ -18,6 +14,10 @@
             android:id="@+id/nav_gank"
             android:icon="@drawable/ic_nav_menu_gank"
             android:title="@string/nav_menu_gank" />
+        <item
+            android:id="@+id/nav_pics"
+            android:icon="@drawable/ic_nav_menu_pics"
+            android:title="@string/nav_menu_pics" />
     </group>
 
     <item android:title="@string/app_name">

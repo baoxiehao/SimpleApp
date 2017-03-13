@@ -18,21 +18,23 @@
     <string name="nav_menu_share">Share</string>
     <string name="nav_menu_setting">Setting</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="fragment_title_zhihu">ZhiHu</string>
     <string name="fragment_title_tech">Tech</string>
-    <string name="fragment_title_blog">Blog</string>
-    <string name="fragment_title_gank">Gank</string>
     <string name="fragment_title_android">Android</string>
+    <string name="fragment_title_blog">Blog</string>
 
+    <string name="fragment_title_gank">Gank</string>
     <string name="fragment_title_fuli">Fuli</string>
-    <string name="fragment_title_diycode_topics">社区</string>
-    <string name="fragment_title_diycode_projects">项目</string>
+
+    <string name="fragment_title_diycode_topics">Topic</string>
+    <string name="fragment_title_diycode_projects">Project</string>
     <string name="fragment_title_diycode_news">News</string>
-    <string name="fragment_title_diycode_github">Github</string>
-    <string name="fragment_title_diycode_sites">酷站</string>
+    <string name="fragment_title_diycode_github">Trending</string>
+    <string name="fragment_title_diycode_sites">Site</string>
+
+    <string name="rss_source_ifanr">IFANR</string>
+    <string name="rss_source_geekpark">Geek Park</string>
+    <string name="rss_source_qdaily">QDaily</string>
 
     <string name="mvp_empty_tip">Empty</string>
     <string name="mvp_error_tip">Error</string>
@@ -42,6 +44,18 @@
     <string name="web_copy_link">Copy Link</string>
     <string name="web_open_with">Open with</string>
 
-    <string name="title_activity_image">ImageActivity</string>
     <string name="save_image">Save Image</string>
+
+    <string name="dialog_title_share_app">Share this app</string>
+
+    <string name="toast_page_refresh_failed">Failed to refresh.</string>
+    <string name="toast_page_load_end">No more data to load.</string>
+    <string name="toast_fuli_turned_on">Fuli will be turned on.</string>
+    <string name="toast_fuli_turned_off">Fuli will be turned off.</string>
+    <string name="toast_share_image_successful">Share successful.</string>
+    <string name="toast_share_image_failed">Share failed.</string>
+    <string name="toast_share_image_result" formatted="false">Shared %d of %d.</string>
+
+    <!-- DO NOT TRANSLATE -->
+    <string name="url_app_download">http://fir.im/simpleapp</string>
 </resources>

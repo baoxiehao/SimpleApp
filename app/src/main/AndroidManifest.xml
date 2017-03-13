@@ -27,7 +27,6 @@
         <activity
             android:name=".ui.ImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_image"
             android:theme="@style/AppTheme.ImageActivity">
             <intent-filter>
                 <action android:name="com.yekong.droid.simpleapp.action.VIEW_IMAGE" />

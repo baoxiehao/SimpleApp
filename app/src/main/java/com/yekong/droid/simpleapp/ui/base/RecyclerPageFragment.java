@@ -105,7 +105,7 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<List<M>>, P ext
                 if (!presenter.onRefreshData()) {
                     new Handler().postDelayed(() -> {
                         mSwipeLayout.finishRefreshing();
-                        Toaster.quick("Failed to refresh...");
+                        Toaster.quick(getString(R.string.toast_page_refresh_failed));
                     }, 500);
                 }
             }
@@ -115,7 +115,7 @@ public abstract class RecyclerPageFragment<M, V extends BaseView<List<M>>, P ext
                 if (!presenter.onLoadMoreData()) {
                     new Handler().postDelayed(() -> {
                         mSwipeLayout.finishLoadmore();
-                        Toaster.quick("No more to load...");
+                        Toaster.quick(getString(R.string.toast_page_load_end));
                     }, 500);
                 }
             }

@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">简阅</string>
+
+    <string name="action_settings">设置</string>
+    <string name="action_search">搜索</string>
+
+    <string name="nav_menu_info">资讯</string>
+    <string name="nav_menu_pics">美图</string>
+    <string name="nav_menu_code">社区</string>
+    <string name="nav_menu_gank">干货</string>
+    <string name="nav_menu_share">分享</string>
+    <string name="nav_menu_setting">设置</string>
+
+    <string name="fragment_title_zhihu">知乎</string>
+    <string name="fragment_title_tech">科技</string>
+    <string name="fragment_title_blog">博客</string>
+    <string name="fragment_title_android">安卓</string>
+
+    <string name="fragment_title_gank">干货文章</string>
+    <string name="fragment_title_fuli">干货福利</string>
+
+    <string name="fragment_title_diycode_topics">社区</string>
+    <string name="fragment_title_diycode_projects">项目</string>
+    <string name="fragment_title_diycode_news">新闻</string>
+    <string name="fragment_title_diycode_github">排行榜</string>
+    <string name="fragment_title_diycode_sites">酷站</string>
+
+    <string name="rss_source_ifanr">爱范儿</string>
+    <string name="rss_source_geekpark">极客公园</string>
+    <string name="rss_source_qdaily">好奇心日报</string>
+
+    <string name="mvp_empty_tip">没有数据</string>
+    <string name="mvp_error_tip">错误</string>
+
+    <string name="web_refresh">刷新</string>
+    <string name="web_share">分享</string>
+    <string name="web_copy_link">复制链接</string>
+    <string name="web_open_with">其他打开方式</string>
+
+    <string name="save_image">保存图片</string>
+
+    <string name="toast_page_refresh_failed">刷新失败</string>
+    <string name="toast_page_load_end">无更多数据</string>
+    <string name="toast_fuli_turned_on">福利即将呈现</string>
+    <string name="toast_fuli_turned_off">福利已经关闭</string>
+    <string name="toast_share_image_successful">分享图片成功</string>
+    <string name="toast_share_image_failed">分享图片失败</string>
+    <string name="toast_share_image_result" formatted="false">已分享 %d 图片中的 %d 张</string>
+
+    <string name="dialog_title_share_app">分享本应用</string>
+</resources>

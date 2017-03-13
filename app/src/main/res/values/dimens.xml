@@ -12,6 +12,7 @@
 
     <dimen name="card_view_photo_height">200dp</dimen>
     <dimen name="card_view_item_height">75dp</dimen>
+    <dimen name="card_view_item_min_height">48dp</dimen>
     <dimen name="card_view_corner_radius">4dp</dimen>
     <dimen name="card_view_image_size">60dp</dimen>
     <dimen name="card_view_image_text_margin">15dp</dimen>

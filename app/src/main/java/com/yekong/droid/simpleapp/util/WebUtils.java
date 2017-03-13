@@ -44,7 +44,7 @@ public class WebUtils {
                     Environment.getExternalStorageDirectory().getAbsolutePath(), "SimpleApp"));
             if (dir.exists() || dir.mkdirs()) {
                 String fileName = Uri.parse(url).getLastPathSegment();
-                fileName = fileName.replaceFirst(QiniuUtils.PREFIX_SHARE, "");
+                fileName = fileName.substring(fileName.indexOf(QiniuUtils.IMAGE_PREFIX_AFTER));
                 File targetFile = new File(dir, fileName);
                 if (targetFile.exists()) {
                     Logger.d("downloadGlideImage(): file existing!");

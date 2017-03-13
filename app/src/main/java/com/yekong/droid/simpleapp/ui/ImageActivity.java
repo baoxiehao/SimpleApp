@@ -1,6 +1,7 @@
 package com.yekong.droid.simpleapp.ui;
 
 import android.annotation.SuppressLint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.util.Pair;
@@ -123,6 +124,7 @@ public class ImageActivity extends BaseActivity {
         mRecyclerViewPager.setAdapter(adapter);
         mRecyclerViewPager.addOnPageChangedListener((fromPos, toPos) -> {
             mPos = toPos;
+            getSupportActionBar().setTitle(Uri.parse(mUrls.get(mPos)).getLastPathSegment());
         });
         mRecyclerViewPager.scrollToPosition(mPos);
 

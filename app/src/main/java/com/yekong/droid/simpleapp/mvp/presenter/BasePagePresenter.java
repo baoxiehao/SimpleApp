@@ -65,12 +65,16 @@ public abstract class BasePagePresenter<V extends BaseView, M> extends BasePrese
 
     public int onPageScrolled(int lastPosition) {
         int currentPage = 1;
-        if (mPages.size() >= 2) {
-            int pagePosition = mPageDataMap.get(mPages.get(currentPage - 1)).size();
-            while (lastPosition > pagePosition) {
-                currentPage++;
-                pagePosition += mPageDataMap.get(mPages.get(currentPage - 1)).size();
+        try {
+            if (mPages.size() >= 2) {
+                int pagePosition = mPageDataMap.get(mPages.get(currentPage - 1)).size();
+                while (lastPosition > pagePosition) {
+                    currentPage++;
+                    pagePosition += mPageDataMap.get(mPages.get(currentPage - 1)).size();
+                }
             }
+        } catch (Exception e) {
+            Logger.e("onPageScrolled()", e);
         }
         Logger.d("onPageScrolled(): lastPosition=%s, page=%s", lastPosition, currentPage);
         return currentPage;

@@ -1,6 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileOptions {
@@ -14,7 +12,6 @@ android {
     }
 
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
     defaultConfig {
         applicationId "com.yekong.droid.simpleapp"
         minSdkVersion 19
@@ -35,7 +32,7 @@ android {
     }}
 
 def support = '25.0.0'
-def butterknife = '8.4.0'
+def butterknife = '8.8.1'
 def eventbus = '3.0.0'
 def retrofit = '2.1.0'
 def dagger = '2.7'
@@ -56,7 +53,6 @@ dependencies {
 
     // ButterKnife
     compile "com.jakewharton:butterknife:$butterknife"
-    apt "com.jakewharton:butterknife-compiler:$butterknife"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife"
 
     // RxJava
@@ -79,7 +75,7 @@ dependencies {
 
     // Dagger
     compile "com.google.dagger:dagger:$dagger"
-    apt "com.google.dagger:dagger-compiler:$dagger"
+    annotationProcessor "com.google.dagger:dagger-compiler:$dagger"
 
     // MVP mosby
     compile 'com.hannesdorfmann.mosby3:mvp:3.0.0-alpha4'
@@ -130,7 +126,7 @@ dependencies {
 
     // FragmentArgs
     compile 'com.hannesdorfmann.fragmentargs:annotation:3.0.2'
-    apt 'com.hannesdorfmann.fragmentargs:processor:3.0.2'
+    annotationProcessor 'com.hannesdorfmann.fragmentargs:processor:3.0.2'
 
     // AsyncJob for easy background task
     compile 'com.arasthel:asyncjob-library:1.0.3'
